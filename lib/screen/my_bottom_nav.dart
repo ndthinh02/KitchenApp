@@ -1,15 +1,11 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_kitchen/screen/home_page.dart';
 import 'package:flutter_app_kitchen/screen/manager/manager_product_page.dart';
-import 'package:flutter_app_kitchen/screen/notification_page.dart';
-import 'package:flutter_app_kitchen/screen/profile.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
-import 'package:flutter_app_kitchen/ui/text_style.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'bottom/home_page.dart';
+import 'bottom/notification_page.dart';
+import 'bottom/profile.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -33,27 +29,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: colorMain,
-          actions: [_builPopupMenu()],
-        ),
-        bottomNavigationBar: BottomAppBar(
-          color: colorBottomAppbar,
-          shape: const CircularNotchedRectangle(),
-          child: _buildMyNavBar(context),
-        ),
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: colorMain,
-            onPressed: () {},
-            child: const Image(
-              image: AssetImage('images/float_btn.png'),
-            )),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: _buildMyNavBar(context),
         body: _widgetOption.elementAt(pageIndex));
   }
 
   Container _buildMyNavBar(BuildContext context) {
     return Container(
+        decoration: const BoxDecoration(color: colorMain),
         height: 70,
         child: SafeArea(
             child: Padding(
@@ -76,14 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               const GButton(
                 backgroundColor: Colors.transparent,
-                iconColor: Colors.amber,
-                icon: Icons.notifications,
-                iconActiveColor: Colors.amber,
-                text: 'Thông băos',
+                icon: Icons.notifications_outlined,
+                text: 'Thông báo',
               ),
               const GButton(
                 backgroundColor: Colors.transparent,
-                icon: Icons.home_outlined,
+                icon: Icons.today_outlined,
                 text: 'Quản lý đơn',
               ),
               const GButton(
@@ -100,53 +80,5 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
         )));
-  }
-
-  Widget _builPopupMenu() {
-    return PopupMenuButton<int>(
-      onSelected: (value) {
-        if (value == 3) {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: ((context) => const ManagerProductPage())));
-        }
-      },
-      itemBuilder: (context) => [
-        // popupmenu item 1
-        PopupMenuItem(
-          onTap: () {
-            Fluttertoast.showToast(msg: 'Quan ly san mon');
-          },
-          value: 1,
-          // row has two child icon and text.
-          child: Row(
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [Text("Quản lý món")],
-          ),
-        ),
-        // popupmenu item 2
-        PopupMenuItem(
-          onTap: () {
-            Fluttertoast.showToast(msg: 'Quan ly san pham');
-          },
-          value: 2,
-          // row has two child icon and text
-          child: Row(
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [const Text("Quản lý sản phẩm")],
-          ),
-        ),
-        PopupMenuItem(
-          onTap: () {},
-          value: 3,
-          // row has two child icon and text
-          child: Row(
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [const Text("Quản lý đơn ")],
-          ),
-        ),
-      ],
-      offset: const Offset(0, 70),
-      elevation: 2,
-    );
   }
 }

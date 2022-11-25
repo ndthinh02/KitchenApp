@@ -1,8 +1,10 @@
 class AppKey {
   static String urlGetAllProduct =
-      "https://mrestaurantorder.herokuapp.com/restaurant/api/products/all";
+      "https://restaurant-order.onrender.com/restaurant/api/products/all";
   static String urlGetBill =
-      "https://mrestaurantorder.herokuapp.com/restaurant/api/bill/all";
-  static String base_ur =
-      "https://mrestaurantorder.herokuapp.com/restaurant/api/";
+      "https://restaurant-order.onrender.com/restaurant/api/bill/all";
+  static String urlGetStaff =
+      "https://restaurant-order.onrender.com/restaurant/api/staff/all";
+  static String urlPostStaff =
+      "https://restaurant-order.onrender.com/restaurant/api/staff/create";
 }

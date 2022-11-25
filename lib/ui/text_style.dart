@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,5 +29,15 @@ class MyTextStyle {
   TextStyle get textSub {
     return GoogleFonts.josefinSans(
         fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400);
+  }
+
+  TextStyle get textNameBill {
+    return GoogleFonts.josefinSans(
+        fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold);
+  }
+
+  TextStyle get textPriceBill {
+    return GoogleFonts.josefinSans(
+        fontSize: 14, color: Colors.red, fontWeight: FontWeight.bold);
   }
 }

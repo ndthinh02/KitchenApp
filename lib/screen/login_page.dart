@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:flutter_app_kitchen/provider/create_route.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
-
-import 'my_bottom_nav.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,7 +16,14 @@ class LoginPage extends StatefulWidget {
 class _MyHomePageState extends State<LoginPage> {
   final TextEditingController textUserNameController = TextEditingController();
   final TextEditingController textPasstroller = TextEditingController();
+  StaffController get readStaff => context.read<StaffController>();
   bool isShowPass = true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print(readStaff.loadStaff());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,33 +112,41 @@ class _MyHomePageState extends State<LoginPage> {
               ),
             ),
             const SizedBox(height: 20),
-            SizedBox(
-                width: 150,
-                height: 50,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40)),
-                        backgroundColor: Colors.white,
-                        elevation: 5),
-                    onPressed: () {
-                      if (textPasstroller.text.isEmpty ||
-                          textUserNameController.text.isEmpty) {
-                        Fluttertoast.showToast(msg: "Bạn cần nhập đầy đủ");
-                      } else if (textUserNameController.text == 'admin' ||
-                          textPasstroller.text == 'nhabep1') {
-                        Fluttertoast.showToast(msg: "Đăng nhập thành công");
-                        Navigator.of(context).pushReplacement(
-                            CreateRoute().createAnimationHomePage());
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Sai tên tài khoản hoặc mật khẩu");
-                      }
-                    },
-                    child: Text(
-                      'Login',
-                      style: MyTextStyle().textUsername,
-                    )))
+            Consumer<StaffController>(builder: ((context, provider, child) {
+              return SizedBox(
+                  width: 150,
+                  height: 50,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
+                          backgroundColor: Colors.white,
+                          elevation: 5),
+                      onPressed: () async {
+                        if (textPasstroller.text.isEmpty ||
+                            textUserNameController.text.isEmpty) {
+                          Fluttertoast.showToast(msg: "Bạn cần nhập đầy đủ");
+                        } else if (textUserNameController.text ==
+                                provider.nameStaff &&
+                            textPasstroller.text ==
+                                provider.mListStaff![0].password) {
+                          Fluttertoast.showToast(msg: "Đăng nhập thành công");
+                          SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          pref.setString("name", provider.mListStaff![0].name!);
+
+                          Navigator.of(context).pushReplacement(
+                              CreateRoute().createAnimationHomePage());
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Sai tên tài khoản hoặc mật khẩu");
+                        }
+                      },
+                      child: Text(
+                        'Login',
+                        style: MyTextStyle().textUsername,
+                      )));
+            }))
           ],
         ),
       ),

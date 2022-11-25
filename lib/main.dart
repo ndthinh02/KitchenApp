@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/bill_controller.dart';
+import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
-import 'package:flutter_app_kitchen/screen/my_bottom_nav.dart';
-import 'package:flutter_app_kitchen/screen/login_page.dart';
+import 'package:flutter_app_kitchen/provider/staff/staff_provider.dart';
+import 'package:flutter_app_kitchen/provider/user.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/product_controller.dart';
 
-void main() {
+Future<void> main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -17,7 +18,10 @@ void main() {
       ChangeNotifierProvider(
         create: ((context) =>
             BillController(productProvider: ProductProvider())),
-      )
+      ),
+      ChangeNotifierProvider(
+        create: ((context) => StaffController(staffProvider: StaffProvider())),
+      ),
     ],
     child: const MyApp(),
   ));
@@ -36,7 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: User().checkLogin(),
     );
   }
 }

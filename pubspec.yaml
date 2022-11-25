@@ -45,6 +45,7 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   lottie: ^2.0.0
   image_fade: ^0.6.1
+  shared_preferences: ^2.0.15
   
 dev_dependencies:
   flutter_test:

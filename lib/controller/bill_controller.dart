@@ -12,7 +12,6 @@ class BillController extends ChangeNotifier {
     isLoading = true;
     listBillModel = await productProvider.getBill();
     isLoading = false;
-    print(listBillModel);
     notifyListeners();
   }
 }
