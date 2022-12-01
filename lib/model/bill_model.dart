@@ -1,9 +1,11 @@
-class BillModel {
+import 'package:flutter/cupertino.dart';
+
+class BillModel extends ChangeNotifier {
   String? sId;
   String? date;
   String? time;
-  int? totalPrice;
-  int? status;
+  num? totalPrice;
+  num? status;
   int? checkoutType;
   List<Foods>? foods;
   String? idTable;
@@ -11,6 +13,20 @@ class BillModel {
   String? createdAt;
   String? updatedAt;
   int? iV;
+  bool isDone = false;
+  int? statusBill;
+
+  void isToogleDone() {
+    isDone = !isDone;
+    setStatus();
+    notifyListeners();
+  }
+
+  void setStatus() {
+    isDone ? statusBill = 0 : statusBill = 1;
+    print('heheheh$statusBill');
+    notifyListeners();
+  }
 
   BillModel(
       {this.sId,
@@ -36,7 +52,7 @@ class BillModel {
     if (json['foods'] != null) {
       foods = <Foods>[];
       json['foods'].forEach((v) {
-        foods!.add(new Foods.fromJson(v));
+        foods!.add(Foods.fromJson(v));
       });
     }
     idTable = json['idTable'];
@@ -47,21 +63,21 @@ class BillModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['date'] = this.date;
-    data['time'] = this.time;
-    data['totalPrice'] = this.totalPrice;
-    data['status'] = this.status;
-    data['checkoutType'] = this.checkoutType;
-    if (this.foods != null) {
-      data['foods'] = this.foods!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['date'] = date;
+    data['time'] = time;
+    data['totalPrice'] = totalPrice;
+    data['status'] = status;
+    data['checkoutType'] = checkoutType;
+    if (foods != null) {
+      data['foods'] = foods!.map((v) => v.toJson()).toList();
     }
-    data['idTable'] = this.idTable;
-    data['idCustomer'] = this.idCustomer;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['idTable'] = idTable;
+    data['idCustomer'] = idCustomer;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }
@@ -71,8 +87,8 @@ class Foods {
   String? id;
   String? name;
   String? urlImage;
-  int? price;
-  int? total;
+  num? price;
+  num? total;
   String? createdAt;
   String? updatedAt;
 
@@ -98,15 +114,15 @@ class Foods {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['urlImage'] = this.urlImage;
-    data['price'] = this.price;
-    data['total'] = this.total;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['id'] = id;
+    data['name'] = name;
+    data['urlImage'] = urlImage;
+    data['price'] = price;
+    data['total'] = total;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }

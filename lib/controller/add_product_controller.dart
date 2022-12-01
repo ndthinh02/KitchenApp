@@ -2,124 +2,60 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_kitchen/controller/product_controller.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
-class ProductController extends ChangeNotifier {
-  final ProductProvider? productProvider;
-  ProductController({required this.productProvider});
-  bool isLoading = true;
-  List<ProductModel>? mListProduct;
-  List<ProductModel> newList = [];
-  ProductModel? _productModel;
+import '../ui/color.dart';
+
+class AddProductController extends ChangeNotifier {
+  final ProductProvider productProvider;
+  AddProductController({required this.productProvider});
   final nameProductController = TextEditingController();
   final totalProductController = TextEditingController();
   final priceProductController = TextEditingController();
+  late String price = priceProductController.text;
   UploadTask? uploadTask;
   String urlImage = "";
   File? file;
   final _picker = ImagePicker();
+  final List<ProductModel> _mListProduct = [];
+
+  late ProductModel? productModel;
   void _clear() {
     nameProductController.clear();
     totalProductController.clear();
     priceProductController.clear();
   }
 
-  Future loadProductAll() async {
-    isLoading = true;
-    mListProduct = await productProvider?.getProduct();
-    print("heheheh${mListProduct!.length}");
-    isLoading = false;
-    notifyListeners();
-  }
-
-  Future deleteProduct(String id, int index, BuildContext context) async {
+  Future addProduct(BuildContext context) async {
+    final ProductController productController =
+        Provider.of(context, listen: false);
     showDialog(
         context: context,
         builder: (context) {
-          return AlertDialog(
-            title: const Text('Thông báo'),
-            content: const Text("Bạn có muốn xóa sản phẩm này không ?"),
-            actions: [
-              Row(
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("Không")),
-                  TextButton(
-                      onPressed: () async {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            });
-                        await productProvider
-                            ?.deleteProduct(id)
-                            .whenComplete(() => Navigator.of(context).pop())
-                            .whenComplete(() => Navigator.of(context).pop())
-                            .whenComplete(() => mListProduct?.removeAt(index))
-                            .whenComplete(() => Fluttertoast.showToast(
-                                msg: "Xóa thành công",
-                                gravity: ToastGravity.TOP));
-                        notifyListeners();
-                      },
-                      child: const Text("Có")),
-                ],
-              )
-            ],
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         });
-  }
-
-  Future updateProduct(BuildContext context, String id) async {
-    showDialog(
-        context: context,
-        builder: ((context) => const Center(
-              child: CircularProgressIndicator(),
-            )));
-    _productModel = await productProvider
-        ?.updateProduct(id, nameProductController.text,
-            priceProductController.text, totalProductController.text, urlImage)!
-        .whenComplete(() => Navigator.of(context).pop())
+    productModel = await productProvider
+        .addProduct(nameProductController.text, priceProductController.text,
+            totalProductController.text, 1, urlImage)
         .whenComplete(() => _clear())
-        .whenComplete(() => file = null)
-        .whenComplete(() => Fluttertoast.showToast(msg: "Sửa thành công"));
-  }
+        .whenComplete(() => Navigator.of(context).pop())
+        .whenComplete(() => Fluttertoast.showToast(msg: "Thêm thành công"));
+    file = null;
+    productController.mListProduct!.add(productModel!);
+    print('heheheh${productController.mListProduct!.length}');
 
-  getProductInStock(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-    mListProduct = await productProvider!
-        .getProductInStock()
-        .whenComplete(() => Navigator.of(context).pop());
-
-    notifyListeners();
-  }
-
-  getProductOutOfStock(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-    mListProduct = await productProvider!
-        .getProdcutOutOfStock()
-        .whenComplete(() => Navigator.of(context).pop());
     notifyListeners();
   }
 
   Future getImage(BuildContext context) async {
+    print('heheheh${_mListProduct.length}');
     String name = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref();
     Reference referenceDirImage = reference.child("images");
@@ -129,8 +65,8 @@ class ProductController extends ChangeNotifier {
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
     if (pickedFile != null) {
       file = File(pickedFile.path);
-      uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
       notifyListeners();
+      uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
       final snapshot = await uploadTask!.whenComplete(() {});
       urlImage = await snapshot.ref.getDownloadURL();
       uploadTask = null;
@@ -154,24 +90,50 @@ class ProductController extends ChangeNotifier {
       uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
       final snapshot = await uploadTask!.whenComplete(() {});
       urlImage = await snapshot.ref.getDownloadURL();
-
+      uploadTask = null;
       notifyListeners();
     } else {
       Fluttertoast.showToast(msg: 'Không có ảnh được chọn');
     }
   }
 
-  findByName(String seacrh) {
-    if (seacrh.isEmpty) {
-      newList = mListProduct!;
-    } else {
-      newList = mListProduct!
-          .where((element) =>
-              element.name!.toLowerCase().contains(seacrh.toLowerCase()))
-          .toList();
-      notifyListeners();
-    }
-    print('shsjsh$mListProduct');
+  buildProgress() {
+    return StreamBuilder<TaskSnapshot>(
+      stream: uploadTask?.snapshotEvents,
+      builder: (context, snapshot) {
+        print('ahahahaha${snapshot.data}');
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          double progress = data.bytesTransferred / data.totalBytes;
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 50,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.grey,
+                    color: colorMain,
+                  ),
+                  Center(
+                    child: Text(
+                      '${(100 * progress).roundToDouble()}%',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        } else {
+          return const SizedBox(
+            height: 1,
+          );
+        }
+      },
+    );
   }
 
   showBottom(BuildContext context) {

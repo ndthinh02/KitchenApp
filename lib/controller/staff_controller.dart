@@ -8,7 +8,7 @@ class StaffController extends ChangeNotifier {
   StaffController({required this.staffProvider});
   bool isLoading = true;
 
-  Future loadStaff() async {
+  Future loadStaff(String name, String pass) async {
     isLoading = true;
     mListStaff = await staffProvider.getStaff();
     isLoading = false;

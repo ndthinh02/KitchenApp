@@ -1,0 +1,69 @@
+// For foods
+[GET] foods: https://restaurant-server-eight.vercel.app/restaurant/api/foods
+
+// For drinks
+[GET] drinks: https://restaurant-server-eight.vercel.app/restaurant/api/drinks
+
+// For update foods and drinks by id
+[GET] products: https://restaurant-server-eight.vercel.app/restaurant/api/products/all
+
+[GET] products: https://restaurant-server-eight.vercel.app/restaurant/api/products/all/:category
+
+[PUT] products:  https://restaurant-server-eight.vercel.app/restaurant/api/products/:id?_method=PUT
+
+[DELETE] products: https://restaurant-server-eight.vercel.app/restaurant/api/products/:id?_method=DELETE
+
+=================================================
+
+// Add product
+[POST] product: https://restaurant-server-eight.vercel.app/restaurant/api/product/create
+
+//Table
+[GET] table: https://restaurant-server-eight.vercel.app/restaurant/api/table/all/{floor}
+
+[POST] table: https://restaurant-server-eight.vercel.app/restaurant/api/table/create
+
+[GET] table: https://restaurant-server-eight.vercel.app/restaurant/api/table/all
+
+//Floor
+[GET] floor: https://restaurant-server-eight.vercel.app/restaurant/api/floor/all
+
+[POST] floor: https://restaurant-server-eight.vercel.app/restaurant/api/floor/create
+
+// Staff
+[GET] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/all
+
+[POST] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/create
+
+[PUT] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/update/:id?_method=PUT
+
+[DELETE] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/delete/:id?_method=DELETE
+
+[POST] login:  https://restaurant-server-eight.vercel.app/restaurant/api/staff/login
+
+// Bill
+[GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/all
+
+[GET] bill by status: https://restaurant-server-eight.vercel.app/restaurant/api/bill/all/:status
+
+[GET] product in bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable/product
+
+[POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/create
+
+[GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable
+
+[PUT] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/update/:id?_method=PUT
+
+[POST] add product to bill: https://restaurant-server-eight.vercel.app/restaurant/api//bill/product/add/:idBill
+
+// History:
+
+[GET] all: https://restaurant-server-eight.vercel.app/restaurant/api/history/all
+
+[POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/history/create
+
+[GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/history/:id
+
+
+=====> Results returned for each [PUT], [DELETE],[POST] :
+{"message":  " ' Method' successfully "}

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
-import 'package:flutter_app_kitchen/provider/create_route.dart';
+import 'package:flutter_app_kitchen/provider/staff/staff_provider.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../provider/create_route.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,7 +24,7 @@ class _MyHomePageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(readStaff.loadStaff());
+    // print(readStaff.loadStaff());
   }
 
   @override
@@ -123,17 +125,16 @@ class _MyHomePageState extends State<LoginPage> {
                           backgroundColor: Colors.white,
                           elevation: 5),
                       onPressed: () async {
+                        StaffProvider().getStaff();
                         if (textPasstroller.text.isEmpty ||
                             textUserNameController.text.isEmpty) {
                           Fluttertoast.showToast(msg: "Bạn cần nhập đầy đủ");
-                        } else if (textUserNameController.text ==
-                                provider.nameStaff &&
-                            textPasstroller.text ==
-                                provider.mListStaff![0].password) {
+                        } else if (textUserNameController.text == "daubep1" ||
+                            textPasstroller.text == "nhabep123") {
                           Fluttertoast.showToast(msg: "Đăng nhập thành công");
                           SharedPreferences pref =
                               await SharedPreferences.getInstance();
-                          pref.setString("name", provider.mListStaff![0].name!);
+                          pref.setString("name", "daubep1");
 
                           Navigator.of(context).pushReplacement(
                               CreateRoute().createAnimationHomePage());

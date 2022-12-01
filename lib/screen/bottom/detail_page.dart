@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
+import 'package:flutter_app_kitchen/provider/create_route.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
 import 'package:image_fade/image_fade.dart';
 
@@ -15,6 +16,7 @@ class DetailPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Chi tiết sản phẩm'),
         backgroundColor: colorMain,
+        actions: [_builPopupMenu(context)],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,9 +75,29 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  // Widget productType(int index) {
-  //   switch (index) {
-  //     case 0:
-  //   }
-  // }
+  Widget _builPopupMenu(BuildContext context) {
+    return PopupMenuButton<int>(
+      onSelected: (value) async {
+        if (value == 1) {
+          Navigator.of(context).push(CreateRoute()
+              .createAnimationUpdateProductPage(product.name!, product.price!,
+                  product.total!, product.urlImage!, product.sId!));
+        }
+        if (value == 2) {}
+        if (value == 3) {}
+      },
+      itemBuilder: (context) => [
+        // popupmenu item 1
+
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: const [Text("Sửa sản phẩm ")],
+          ),
+        ),
+      ],
+      offset: const Offset(0, 70),
+      elevation: 2,
+    );
+  }
 }

@@ -46,6 +46,12 @@ dependencies:
   lottie: ^2.0.0
   image_fade: ^0.6.1
   shared_preferences: ^2.0.15
+  get: ^4.6.5
+  image_picker: ^0.8.6
+  firebase_storage: ^11.0.6
+  firebase_core: ^2.3.0
+  device_preview: ^1.1.0
+  image_cropper: ^3.0.1
   
 dev_dependencies:
   flutter_test:

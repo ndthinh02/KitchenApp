@@ -9,6 +9,8 @@ class StaffProvider extends DioForNative {
     try {
       final resp = await get(AppKey.urlGetStaff);
       var getDataStaff = resp.data as List;
+      // var json = jsonDecode(getDataStaff.toString());
+      // print('hihihi$getDataStaff');
 
       return getDataStaff
           .map((e) => Staff.fromJson(e))

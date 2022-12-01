@@ -59,9 +59,13 @@ class DetailBill extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                items.name!,
-                                style: MyTextStyle().textNameBill,
+                              SizedBox(
+                                width: 150,
+                                child: Text(
+                                  items.name!,
+                                  style: MyTextStyle().textNameBill,
+                                  maxLines: 1,
+                                ),
                               ),
                               Text(
                                 'Số lượng: ${items.total}',
