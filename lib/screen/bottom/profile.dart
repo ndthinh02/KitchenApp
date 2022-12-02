@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/user.dart';
+import '../../controller/notification.dart';
 import '../../ui/color.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -11,6 +11,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final StaffController staffController = Provider.of(context);
+    final controller = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cá nhân'),
@@ -21,10 +22,14 @@ class ProfilePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                User().logout(context);
+                NotificationKitChen().pushNotification(controller.text);
               },
               child: const Text('data'),
             ),
+            TextFormField(
+              controller: controller,
+              decoration: const InputDecoration(hintText: 'San pham'),
+            )
             // Text(staffController.nameStaff)
           ],
         ),

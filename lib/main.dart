@@ -1,5 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/add_product_controller.dart';
@@ -10,17 +11,19 @@ import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
 import 'package:flutter_app_kitchen/provider/staff/staff_provider.dart';
 import 'package:flutter_app_kitchen/provider/user.dart';
+import 'package:flutter_app_kitchen/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
 import 'controller/product_controller.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
 Future<void> main() async {
-  // DevicePreview(
-  //   enabled: !kReleaseMode,
-  //   builder: (context) => const MyApp(), // Wrap your app
-  // );
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  NotificationService.initialize();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(

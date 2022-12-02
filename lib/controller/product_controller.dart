@@ -7,12 +7,15 @@ import 'package:flutter_app_kitchen/provider/product_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../screen/my_bottom_nav.dart';
+
 class ProductController extends ChangeNotifier {
   final ProductProvider? productProvider;
   ProductController({required this.productProvider});
   bool isLoading = true;
   List<ProductModel>? mListProduct;
-  List<ProductModel> newList = [];
+  List<ProductModel>? listFilterProduct;
+
   ProductModel? _productModel;
   final nameProductController = TextEditingController();
   final totalProductController = TextEditingController();
@@ -28,9 +31,9 @@ class ProductController extends ChangeNotifier {
   }
 
   Future loadProductAll() async {
+    listFilterProduct = mListProduct;
     isLoading = true;
     mListProduct = await productProvider?.getProduct();
-    print("heheheh${mListProduct!.length}");
     isLoading = false;
     notifyListeners();
   }
@@ -88,8 +91,11 @@ class ProductController extends ChangeNotifier {
             priceProductController.text, totalProductController.text, urlImage)!
         .whenComplete(() => Navigator.of(context).pop())
         .whenComplete(() => _clear())
+        .whenComplete(() => Fluttertoast.showToast(
+            msg: "Sửa thành công", gravity: ToastGravity.TOP))
         .whenComplete(() => file = null)
-        .whenComplete(() => Fluttertoast.showToast(msg: "Sửa thành công"));
+        .whenComplete(() => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const MyHomePage())));
   }
 
   getProductInStock(BuildContext context) async {
@@ -136,7 +142,8 @@ class ProductController extends ChangeNotifier {
       uploadTask = null;
       notifyListeners();
     } else {
-      Fluttertoast.showToast(msg: 'Không có ảnh được chọn');
+      Fluttertoast.showToast(
+          msg: 'Không có ảnh được chọn', gravity: ToastGravity.TOP);
     }
   }
 
@@ -157,21 +164,23 @@ class ProductController extends ChangeNotifier {
 
       notifyListeners();
     } else {
-      Fluttertoast.showToast(msg: 'Không có ảnh được chọn');
+      Fluttertoast.showToast(
+          msg: 'Không có ảnh được chọn', gravity: ToastGravity.TOP);
     }
   }
 
   findByName(String seacrh) {
     if (seacrh.isEmpty) {
-      newList = mListProduct!;
+      mListProduct = listFilterProduct;
+      notifyListeners();
     } else {
-      newList = mListProduct!
+      mListProduct = listFilterProduct!
           .where((element) =>
               element.name!.toLowerCase().contains(seacrh.toLowerCase()))
           .toList();
+      print('sadnsjd${mListProduct!.length}');
       notifyListeners();
     }
-    print('shsjsh$mListProduct');
   }
 
   showBottom(BuildContext context) {

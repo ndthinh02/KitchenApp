@@ -1,9 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/product_controller.dart';
 import 'package:image_fade/image_fade.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/create_route.dart';
+import '../../service/notification_service.dart';
 import '../../ui/color.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,31 +26,85 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging fcm = FirebaseMessaging.instance;
+    final token = await fcm.getToken();
+    String deviceTokenToSendPushNotification = token.toString();
+    RemoteMessage remoteMessage;
+    print("Token Value $deviceTokenToSendPushNotification");
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.pixels ==
-    //       _scrollController.position.maxScrollExtent) {
-    //     print('object$curentItem');
-    //     if (curentItem < productController.mListProduct!.length) {
-    //       setState(() {
-    //         curentItem += 10;
-    //       });
-    //     }
-    //   }
-    // });
     productController.loadProductAll();
+
+    // 1. This method call when app in terminated state and you get a notification
+    // when you click on notification app open from terminated state and you can get notification data in this method
+
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        print("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          print("New Notification");
+        }
+      },
+    );
+
+    // 2. This method only call when App in forground it mean app must be opened
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        print("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data11 ${message.data}");
+          NotificationService.createanddisplaynotification(message);
+        }
+      },
+    );
+
+    // 3. This method only call when App in background and not terminated(not closed)
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data22 ${message.data['_id']}");
+          NotificationService.createanddisplaynotification(message);
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    // getDeviceTokenToSendNotification();
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Quản lý sản phẩm'),
+          title: Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              onChanged: (value) => _seacrh(value),
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  hintText: "Tìm kiếm sản phẩm"),
+            ),
+          ),
           backgroundColor: colorMain,
-          actions: [_builPopupMenu(context)],
+          actions: [
+            Row(
+              children: [
+                const Icon(Icons.search),
+                _builPopupMenu(context),
+              ],
+            )
+          ],
         ),
         body: Column(
           children: [
@@ -81,21 +137,6 @@ class _HomePageState extends State<HomePage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(10),
-                      child: TextField(
-                        onChanged: (value) => _seacrh(value),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          label: const Text(
-                            "Tìm kiếm sản phẩm",
-                          ),
-                        ),
-                      ),
-                    ),
                     Consumer<ProductController>(
                       builder: (context, provider, child) {
                         if (provider.isLoading) {
@@ -153,6 +194,7 @@ class _HomePageState extends State<HomePage> {
                                         child: Stack(
                                           children: [
                                             ImageFade(
+                                              width: double.infinity,
                                               height: double.infinity,
                                               image: NetworkImage(provider
                                                   .mListProduct![index]

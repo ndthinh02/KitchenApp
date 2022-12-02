@@ -2,13 +2,12 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_kitchen/controller/product_controller.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
+import '../screen/my_bottom_nav.dart';
 import '../ui/color.dart';
 
 class AddProductController extends ChangeNotifier {
@@ -24,7 +23,7 @@ class AddProductController extends ChangeNotifier {
   final _picker = ImagePicker();
   final List<ProductModel> _mListProduct = [];
 
-  late ProductModel? productModel;
+  ProductModel? _productModel;
   void _clear() {
     nameProductController.clear();
     totalProductController.clear();
@@ -32,8 +31,6 @@ class AddProductController extends ChangeNotifier {
   }
 
   Future addProduct(BuildContext context) async {
-    final ProductController productController =
-        Provider.of(context, listen: false);
     showDialog(
         context: context,
         builder: (context) {
@@ -41,21 +38,22 @@ class AddProductController extends ChangeNotifier {
             child: CircularProgressIndicator(),
           );
         });
-    productModel = await productProvider
+    _productModel = await productProvider
         .addProduct(nameProductController.text, priceProductController.text,
             totalProductController.text, 1, urlImage)
         .whenComplete(() => _clear())
         .whenComplete(() => Navigator.of(context).pop())
-        .whenComplete(() => Fluttertoast.showToast(msg: "Thêm thành công"));
-    file = null;
-    productController.mListProduct!.add(productModel!);
-    print('heheheh${productController.mListProduct!.length}');
+        .whenComplete(() => Fluttertoast.showToast(
+            msg: "Thêm thành công", gravity: ToastGravity.TOP))
+        .whenComplete(() => file = null)
+        .whenComplete(() => Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const MyHomePage())));
 
+    print('uhsds$file');
     notifyListeners();
   }
 
   Future getImage(BuildContext context) async {
-    print('heheheh${_mListProduct.length}');
     String name = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref();
     Reference referenceDirImage = reference.child("images");
@@ -72,7 +70,8 @@ class AddProductController extends ChangeNotifier {
       uploadTask = null;
       notifyListeners();
     } else {
-      Fluttertoast.showToast(msg: 'Không có ảnh được chọn');
+      Fluttertoast.showToast(
+          msg: 'Không có ảnh được chọn', gravity: ToastGravity.TOP);
     }
   }
 
@@ -93,7 +92,8 @@ class AddProductController extends ChangeNotifier {
       uploadTask = null;
       notifyListeners();
     } else {
-      Fluttertoast.showToast(msg: 'Không có ảnh được chọn');
+      Fluttertoast.showToast(
+          msg: 'Không có ảnh được chọn', gravity: ToastGravity.TOP);
     }
   }
 
