@@ -22,7 +22,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      name: "Kitchen",
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyDpzZLclQHCqFQj-YXIvkfLnr6YMbQM9Qg",
+          appId: "1:941187178023:android:7e2779f1bead2f58437802",
+          messagingSenderId: "941187178023",
+          projectId: "restaurant-order-d1125"));
   NotificationService.initialize();
   runApp(MultiProvider(
     providers: [

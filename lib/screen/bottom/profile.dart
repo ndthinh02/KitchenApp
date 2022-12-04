@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../../controller/notification.dart';
+import '../../service/notification.dart';
 import '../../ui/color.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -14,6 +14,7 @@ class ProfilePage extends StatelessWidget {
     final controller = TextEditingController();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Cá nhân'),
         backgroundColor: colorMain,
       ),

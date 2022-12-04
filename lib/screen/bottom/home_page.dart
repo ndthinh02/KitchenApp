@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
     // getDeviceTokenToSendNotification();
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Container(
             margin: const EdgeInsets.all(10),
             padding: const EdgeInsets.all(10),

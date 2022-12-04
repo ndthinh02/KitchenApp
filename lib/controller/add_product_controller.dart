@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
+import 'package:flutter_app_kitchen/service/notification.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,10 +19,10 @@ class AddProductController extends ChangeNotifier {
   final priceProductController = TextEditingController();
   late String price = priceProductController.text;
   UploadTask? uploadTask;
-  String urlImage = "";
+  String urlImageeee = "";
+
   File? file;
   final _picker = ImagePicker();
-  final List<ProductModel> _mListProduct = [];
 
   ProductModel? _productModel;
   void _clear() {
@@ -30,49 +31,27 @@ class AddProductController extends ChangeNotifier {
     priceProductController.clear();
   }
 
-  Future addProduct(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-    _productModel = await productProvider
-        .addProduct(nameProductController.text, priceProductController.text,
-            totalProductController.text, 1, urlImage)
-        .whenComplete(() => _clear())
-        .whenComplete(() => Navigator.of(context).pop())
-        .whenComplete(() => Fluttertoast.showToast(
-            msg: "Thêm thành công", gravity: ToastGravity.TOP))
-        .whenComplete(() => file = null)
-        .whenComplete(() => Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MyHomePage())));
-
-    print('uhsds$file');
-    notifyListeners();
-  }
-
   Future getImage(BuildContext context) async {
     String name = DateTime.now().millisecondsSinceEpoch.toString();
     Reference reference = FirebaseStorage.instance.ref();
     Reference referenceDirImage = reference.child("images");
     Reference referenceUploadImage = referenceDirImage.child(name);
+    print('heehehh$reference');
 
     final pickedFile =
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    file = File(pickedFile!.path);
+    notifyListeners();
+    uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
+    final snapshot = await uploadTask!.whenComplete(() {});
+    urlImageeee = await snapshot.ref.getDownloadURL();
+    uploadTask = null;
     if (pickedFile != null) {
-      file = File(pickedFile.path);
-      notifyListeners();
-      uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
-      final snapshot = await uploadTask!.whenComplete(() {});
-      urlImage = await snapshot.ref.getDownloadURL();
-      uploadTask = null;
-      notifyListeners();
     } else {
       Fluttertoast.showToast(
           msg: 'Không có ảnh được chọn', gravity: ToastGravity.TOP);
     }
+    notifyListeners();
   }
 
   Future getCamera(BuildContext context) async {
@@ -83,17 +62,54 @@ class AddProductController extends ChangeNotifier {
 
     final pickedFile =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+
+    file = File(pickedFile!.path);
+    notifyListeners();
+    uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
+    final snapshot = await uploadTask!.whenComplete(() {});
+    urlImageeee = await snapshot.ref.getDownloadURL();
+    print('ahahhahah$file');
+    uploadTask = null;
     if (pickedFile != null) {
-      file = File(pickedFile.path);
-      notifyListeners();
-      uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
-      final snapshot = await uploadTask!.whenComplete(() {});
-      urlImage = await snapshot.ref.getDownloadURL();
-      uploadTask = null;
-      notifyListeners();
     } else {
       Fluttertoast.showToast(
           msg: 'Không có ảnh được chọn', gravity: ToastGravity.TOP);
+      file = null;
+    }
+    notifyListeners();
+  }
+
+  Future addProduct(BuildContext context) async {
+    if (urlImageeee.isEmpty) {
+      Fluttertoast.showToast(
+          msg: 'Đã xảy ra lỗi, hãy chọn lại ảnh', gravity: ToastGravity.TOP);
+    } else {
+      if (file == null) {
+        Fluttertoast.showToast(msg: "Hãy chọn ảnh", gravity: ToastGravity.TOP);
+      } else {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            });
+        _productModel = await productProvider
+            .addProduct(nameProductController.text, priceProductController.text,
+                totalProductController.text, 1, urlImageeee)
+            .whenComplete(() => _clear())
+            .whenComplete(() => Navigator.of(context).pop())
+            .whenComplete(() => Fluttertoast.showToast(
+                msg: "Thêm thành công", gravity: ToastGravity.TOP))
+            .whenComplete(() => file = null)
+            .whenComplete(() => NotificationKitChen().pushNotification(
+                'Nha bep  vua them ${nameProductController.text}'))
+            .whenComplete(() => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const MyHomePage())));
+
+        notifyListeners();
+      }
     }
   }
 

@@ -27,6 +27,7 @@ class _ManagerProductPageState extends State<ManagerProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: colorMain,
           title: const Text('Quản lý đơn '),
         ),

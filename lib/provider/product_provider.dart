@@ -74,13 +74,13 @@ class ProductProvider extends DioForNative {
   Future<void> deleteProduct(String id) async {
     try {
       final resp = await delete(
-          "https://restaurant-order.onrender.com/restaurant/api/products/$id?_method=DELETE");
+          "https://restaurant-server-eight.vercel.app/restaurant/api/products/$id?_method=DELETE");
     } on DioError catch (e) {
       e.message;
     }
   }
 
-  Future<ProductModel>? updateProduct(String id, String name, String price,
+  Future<ProductModel?> updateProduct(String id, String name, String price,
       String total, String urlImage) async {
     ProductModel? updateProduct;
     var data = {

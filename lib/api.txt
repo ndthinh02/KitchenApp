@@ -65,5 +65,12 @@
 [GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/history/:id
 
 
+// Notification:
+
+[GET] all: https://restaurant-server-eight.vercel.app/restaurant/api/notification/:idStaff
+
+[POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/notification/create
+
+
 =====> Results returned for each [PUT], [DELETE],[POST] :
 {"message":  " ' Method' successfully "}

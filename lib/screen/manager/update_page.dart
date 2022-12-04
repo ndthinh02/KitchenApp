@@ -1,11 +1,9 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/product_controller.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class UpdateProductPage extends StatefulWidget {
@@ -30,10 +28,18 @@ class _AddProductPageState extends State<UpdateProductPage> {
   final _formKey = GlobalKey<FormState>();
   ProductController get provider => context.read<ProductController>();
   ProductController get watchProvider => context.watch<ProductController>();
-  UploadTask? uploadTask;
-  String urlImage = "";
-  File? file;
-  final _picker = ImagePicker();
+  late String name = provider.nameProductController.text;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    provider.nameProductController.text = widget.name;
+    provider.totalProductController.text = '${widget.total}';
+    provider.priceProductController.text = '${widget.price}';
+
+    provider;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +59,7 @@ class _AddProductPageState extends State<UpdateProductPage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: buildForm(),
+                      child: buildForm(widget.name, widget.total, widget.price),
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(onTap: () async {
@@ -89,9 +95,8 @@ class _AddProductPageState extends State<UpdateProductPage> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            provider.updateProduct(context, widget.id);
-                          }
+                          provider.updateProduct(
+                              context, widget.id, widget.urlImage);
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: colorMain,
@@ -100,6 +105,7 @@ class _AddProductPageState extends State<UpdateProductPage> {
                         child: const Text('Sửa'),
                       ),
                     ),
+                    watchProvider.buildProgress()
                   ],
                 ),
               ),
@@ -108,45 +114,51 @@ class _AddProductPageState extends State<UpdateProductPage> {
         ));
   }
 
-  Widget buildForm() {
+  Widget buildForm(String name, num total, num price) {
     return Form(
         key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Hãy nhập đầy đủ';
-                }
-                return null;
-              },
-              controller: provider.nameProductController,
-              decoration: const InputDecoration(
-                  hintText: 'Tên sản phẩm', labelText: 'Tên sản phẩm'),
-            ),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Hãy nhập đầy đủ';
-                }
-                return null;
-              },
-              controller: provider.totalProductController,
-              decoration: const InputDecoration(hintText: 'Số lượng sản phẩm'),
-            ),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Hãy nhập đầy đủ';
-                }
-                return null;
-              },
-              controller: provider.priceProductController,
-              decoration: const InputDecoration(hintText: 'Giá sản phẩm'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                autofocus: false,
+                controller: provider.nameProductController,
+                decoration: InputDecoration(
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    filled: true,
+                    hintText: name,
+                    labelText: "Tên sản phẩm"),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                keyboardType: TextInputType.number,
+                controller: provider.totalProductController,
+                decoration: InputDecoration(
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    filled: true,
+                    hintText: '$total',
+                    labelText: "Số lượng sản phẩm"),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextField(
+                keyboardType: TextInputType.number,
+                controller: provider.priceProductController,
+                decoration: InputDecoration(
+                    border:
+                        const OutlineInputBorder(borderSide: BorderSide.none),
+                    filled: true,
+                    hintText: '$price',
+                    labelText: "Giá sản phẩm"),
+              ),
+            ],
+          ),
         ));
   }
 }
