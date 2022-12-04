@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class User {
   autoLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? name = pref.getString('name');
+    String? account = pref.getString('account');
 
-    if (name == null) {
+    if (account == null) {
       return const LoginPage();
     } else {
       return const MyHomePage();
@@ -29,8 +29,9 @@ class User {
 
   logout(BuildContext context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? name = pref.getString('name');
-    pref.remove(name!);
+    String? account = pref.getString('account');
+
+    pref.remove('account');
     // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (ctx) => const LoginPage()));

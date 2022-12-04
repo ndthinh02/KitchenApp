@@ -101,4 +101,15 @@ class ProductProvider extends DioForNative {
     }
     return updateProduct!;
   }
+
+  Future<List<ProductModel>?> getProductByCategory(int idCategory) async {
+    try {
+      final resp = await get('${AppKey.getProductByCategory}$idCategory');
+      var getDataProduct = resp.data as List;
+      return getDataProduct.map((e) => ProductModel.fromJson(e)).toList();
+    } on DioError catch (dioErr) {
+      print(dioErr.error);
+    }
+    return null;
+  }
 }

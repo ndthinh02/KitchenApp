@@ -1,28 +1,20 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/staff.dart';
 import 'package:flutter_app_kitchen/provider/staff/staff_provider.dart';
 
 class StaffController extends ChangeNotifier {
-  List<Staff>? mListStaff;
+  Staff? mListStaff;
   final StaffProvider staffProvider;
   StaffController({required this.staffProvider});
   bool isLoading = true;
 
-  Future loadStaff(String name, String pass) async {
+  Future loadStaff(String account, String pass, String tokenFCM,
+      BuildContext context) async {
     isLoading = true;
-    mListStaff = await staffProvider.getStaff();
+    mListStaff = await staffProvider.getStaff(account, pass, tokenFCM, context);
+    print('hehehe $mListStaff');
     isLoading = false;
     notifyListeners();
-  }
-
-  String get nameStaff {
-    String name = '';
-
-    mListStaff?.forEach((element) {
-      name = element.name!;
-      // print('dmaksdn${element.}');
-    });
-    return name;
   }
 
   // String get passStaff {

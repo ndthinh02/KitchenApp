@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_kitchen/screen/manager/manager_product_page.dart';
+import 'package:flutter_app_kitchen/screen/manager/bill.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -22,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _widgetOption = [
     const HomePage(),
     const NotificationPage(),
-    const ManagerProductPage(),
+    const BillPage(),
     const ProfilePage(),
   ];
 

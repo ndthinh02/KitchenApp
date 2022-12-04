@@ -12,10 +12,14 @@ class AppKey {
   static String addProductUrl =
       "https://restaurant-server-eight.vercel.app/restaurant/api/product/create";
 
+  static String getProductByCategory =
+      "https://restaurant-server-eight.vercel.app/restaurant/api/products/all/";
   static String deleteProductUrl =
       "https://restaurant-server-eight.vercel.app/restaurant/api/products/";
   static String updateProductUrl =
       "https://restaurant-server-eight.vercel.app/restaurant/api/products/";
+  static String loginStaff =
+      "https://restaurant-server-eight.vercel.app/restaurant/api/staff/login";
   static String severKeyNotification =
       "key=AAAAWWW69No:APA91bGmgKKqC3zr5h72EgK2A_ujScT2Ny1auDx0rXvC7tYQkUOu5J-TuPDpUOOcSk1gF3RB0mSS5I62B3dKWRVAK9eHwcIV29J_ueEFewDScRVK-3UFLaaIsDbQkY3_dP1te5RPrRU9";
   static String tokenDevice =

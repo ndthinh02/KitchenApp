@@ -7,6 +7,10 @@ class MyTextStyle {
     return GoogleFonts.josefinSans(fontSize: 70, color: colorMain);
   }
 
+  TextStyle get textCategory {
+    return GoogleFonts.josefinSans(fontSize: 20, color: Colors.white);
+  }
+
   TextStyle get textUsername {
     return GoogleFonts.josefinSans(fontSize: 16, color: colorMain);
   }

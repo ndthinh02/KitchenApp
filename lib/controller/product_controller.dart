@@ -282,4 +282,19 @@ class ProductController extends ChangeNotifier {
       },
     );
   }
+
+  getCategory(BuildContext context, int category) async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    mListProduct = await productProvider!
+        .getProductByCategory(category)
+        .whenComplete(() => Navigator.of(context).pop());
+    print('sadsd ${mListProduct!.length}');
+    notifyListeners();
+  }
 }

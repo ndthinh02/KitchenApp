@@ -1,12 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
-import 'package:flutter_app_kitchen/provider/staff/staff_provider.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../provider/create_route.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,13 +20,22 @@ class _MyHomePageState extends State<LoginPage> {
   bool isShowPass = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // print(readStaff.loadStaff());
+  }
+
+  String tokenFCM = "";
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging fcm = FirebaseMessaging.instance;
+    final token = await fcm.getToken();
+    tokenFCM = token.toString();
+    RemoteMessage remoteMessage;
+    print("Token Value $tokenFCM");
   }
 
   @override
   Widget build(BuildContext context) {
+    getDeviceTokenToSendNotification();
+
     return Scaffold(
         body: Container(
       height: double.infinity,
@@ -125,26 +132,22 @@ class _MyHomePageState extends State<LoginPage> {
                           backgroundColor: Colors.white,
                           elevation: 5),
                       onPressed: () async {
-                        StaffProvider().getStaff();
                         if (textPasstroller.text.isEmpty ||
                             textUserNameController.text.isEmpty) {
-                          Fluttertoast.showToast(msg: "Bạn cần nhập đầy đủ");
-                        } else if (textUserNameController.text == "daubep1" ||
-                            textPasstroller.text == "nhabep123") {
-                          Fluttertoast.showToast(msg: "Đăng nhập thành công");
-                          SharedPreferences pref =
-                              await SharedPreferences.getInstance();
-                          pref.setString("name", "daubep1");
-
-                          Navigator.of(context).pushReplacement(
-                              CreateRoute().createAnimationHomePage());
-                        } else {
                           Fluttertoast.showToast(
-                              msg: "Sai tên tài khoản hoặc mật khẩu");
+                              msg: "Bạn cần nhập đầy đủ",
+                              gravity: ToastGravity.TOP);
+                        } else {
+                          final SharedPreferences pref =
+                              await SharedPreferences.getInstance();
+                          pref.setString(
+                              "account", textUserNameController.text);
+                          provider.loadStaff(textUserNameController.text,
+                              textPasstroller.text, tokenFCM, context);
                         }
                       },
                       child: Text(
-                        'Login',
+                        'Đăng nhập',
                         style: MyTextStyle().textUsername,
                       )));
             }))

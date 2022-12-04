@@ -6,25 +6,18 @@ class BillModel extends ChangeNotifier {
   String? time;
   num? totalPrice;
   num? status;
-  int? checkoutType;
+  num? checkoutType;
   List<Foods>? foods;
-  String? idTable;
+  Table? table;
   String? idCustomer;
+  String? idStaff;
   String? createdAt;
   String? updatedAt;
-  int? iV;
+  num? iV;
   bool isDone = false;
-  int? statusBill;
 
   void isToogleDone() {
     isDone = !isDone;
-    setStatus();
-    notifyListeners();
-  }
-
-  void setStatus() {
-    isDone ? statusBill = 0 : statusBill = 1;
-    print('heheheh$statusBill');
     notifyListeners();
   }
 
@@ -36,11 +29,13 @@ class BillModel extends ChangeNotifier {
       this.status,
       this.checkoutType,
       this.foods,
-      this.idTable,
+      this.table,
       this.idCustomer,
+      this.idStaff,
       this.createdAt,
       this.updatedAt,
-      this.iV});
+      this.iV,
+      this.isDone = false});
 
   BillModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -55,8 +50,9 @@ class BillModel extends ChangeNotifier {
         foods!.add(Foods.fromJson(v));
       });
     }
-    idTable = json['idTable'];
+    table = json['table'] != null ? Table.fromJson(json['table']) : null;
     idCustomer = json['idCustomer'];
+    idStaff = json['idStaff'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -73,8 +69,11 @@ class BillModel extends ChangeNotifier {
     if (foods != null) {
       data['foods'] = foods!.map((v) => v.toJson()).toList();
     }
-    data['idTable'] = idTable;
+    if (table != null) {
+      data['table'] = table!.toJson();
+    }
     data['idCustomer'] = idCustomer;
+    data['idStaff'] = idStaff;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['__v'] = iV;
@@ -83,44 +82,89 @@ class BillModel extends ChangeNotifier {
 }
 
 class Foods {
-  String? sId;
-  String? id;
   String? name;
   String? urlImage;
-  num? price;
+  num? type;
   num? total;
+  num? price;
+  num? amount;
+  num? idCategory;
+  String? sId;
   String? createdAt;
   String? updatedAt;
 
   Foods(
-      {this.sId,
-      this.id,
-      this.name,
+      {this.name,
       this.urlImage,
-      this.price,
+      this.type,
       this.total,
+      this.price,
+      this.amount,
+      this.idCategory,
+      this.sId,
       this.createdAt,
       this.updatedAt});
 
   Foods.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    id = json['id'];
     name = json['name'];
     urlImage = json['urlImage'];
-    price = json['price'];
+    type = json['type'];
     total = json['total'];
+    price = json['price'];
+    amount = json['amount'];
+    idCategory = json['idCategory'];
+    sId = json['_id'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['_id'] = sId;
-    data['id'] = id;
     data['name'] = name;
     data['urlImage'] = urlImage;
-    data['price'] = price;
+    data['type'] = type;
     data['total'] = total;
+    data['price'] = price;
+    data['amount'] = amount;
+    data['idCategory'] = idCategory;
+    data['_id'] = sId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    return data;
+  }
+}
+
+class Table {
+  String? name;
+  num? capacity;
+  num? status;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+
+  Table(
+      {this.name,
+      this.capacity,
+      this.status,
+      this.sId,
+      this.createdAt,
+      this.updatedAt});
+
+  Table.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    capacity = json['capacity'];
+    status = json['status'];
+    sId = json['_id'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['capacity'] = capacity;
+    data['status'] = status;
+    data['_id'] = sId;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;

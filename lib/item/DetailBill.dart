@@ -34,7 +34,7 @@ class _DetailBillState extends State<ListBill> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Bàn ${widget.index + 1}',
+                    billProvider.listBillModel![widget.index].table!.name!,
                     style: MyTextStyle().textName,
                   ),
                   Row(
@@ -76,11 +76,9 @@ class _DetailBillState extends State<ListBill> {
                   onPressed: () {
                     setState(() {
                       widget.billModel.isToogleDone();
-                      billProvider.updateBill(widget.billModel.sId,
-                          widget.billModel.statusBill!, context);
                     });
                   },
-                  child: widget.billModel.status == 0
+                  child: widget.billModel.isDone
                       ? const Text('Chưa hoàn thành')
                       : const Text('Đã hoàn thành'),
                 ),

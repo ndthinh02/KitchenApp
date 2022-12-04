@@ -12,6 +12,7 @@ class BillController extends ChangeNotifier {
   Future loadBill() async {
     isLoading = true;
     listBillModel = await billProvider.getBill();
+
     isLoading = false;
     notifyListeners();
   }

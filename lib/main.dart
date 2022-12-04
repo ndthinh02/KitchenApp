@@ -1,10 +1,9 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/add_product_controller.dart';
 import 'package:flutter_app_kitchen/controller/bill_controller.dart';
+import 'package:flutter_app_kitchen/controller/category_controller.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
@@ -30,34 +29,31 @@ Future<void> main() async {
           messagingSenderId: "941187178023",
           projectId: "restaurant-order-d1125"));
   NotificationService.initialize();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-        create: ((context) =>
-            ProductController(productProvider: ProductProvider())),
-      ),
-      ChangeNotifierProvider(
-        create: ((context) => BillController(billProvider: BillProvider())),
-      ),
-      ChangeNotifierProvider(
-        create: ((context) => StaffController(staffProvider: StaffProvider())),
-      ),
-      ChangeNotifierProvider(
-        create: ((context) => BillModel()),
-      ),
-      ChangeNotifierProvider(
-        create: ((context) => BillProvider()),
-      ),
-      ChangeNotifierProvider(
-        create: ((context) =>
-            AddProductController(productProvider: ProductProvider())),
-      ),
-    ],
-    child: DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const MyApp(), // Wrap your app
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: ((context) =>
+          ProductController(productProvider: ProductProvider())),
     ),
-  ));
+    ChangeNotifierProvider(
+      create: ((context) => BillController(billProvider: BillProvider())),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) => StaffController(staffProvider: StaffProvider())),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) => BillModel()),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) => BillProvider()),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) =>
+          AddProductController(productProvider: ProductProvider())),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) => CategoryController()),
+    ),
+  ], child: const MyApp()));
 }
 
 final navigatorKey = GlobalKey<NavigatorState>();
