@@ -21,7 +21,7 @@ class AppKey {
   static String loginStaff =
       "https://restaurant-server-eight.vercel.app/restaurant/api/staff/login";
   static String severKeyNotification =
-      "key=AAAAWWW69No:APA91bGmgKKqC3zr5h72EgK2A_ujScT2Ny1auDx0rXvC7tYQkUOu5J-TuPDpUOOcSk1gF3RB0mSS5I62B3dKWRVAK9eHwcIV29J_ueEFewDScRVK-3UFLaaIsDbQkY3_dP1te5RPrRU9";
+      "key=AAAA2yMgnic:APA91bG9frncZOF3uRMTnq0A856HPT1Gxhb-d1UFBEhFsN8-5ALbCA2mtdzhjYjXUNVz94cCOkihqcoKpToXEg3toxBye4NirV_DkX8pOKir9m2hjKbdm3xpZHVe4P7MrAEyR7v3r71I";
   static String tokenDevice =
-      "eNtakclrRoamJ-wnfod1vh:APA91bFfgmQ2BBjPJoY__FYObPuUiw9zRMgCWvCWDfluXp6v8GAzTGGR6g3g6TRrWmRurBgUxJj72AiUAvY2AMaRLFIGApLbSprejqIVAHaJMK2vvaW6zjJjJO74H1szBZfvZBSLuhmp";
+      "dTKEeNa0QdOK-m0_NROzsl:APA91bHya_ttWelcBJUKidukxlU0ocK-pHbh9eaWJ8mj81BqV6c00A55RVxSr9fuH4itQmwZHYsSoAPXDggDHS9ONs7NcHAoi0ovverLzX26CaKC4aFSMg3KqEZZ8kwCkvUgWXD8vXQ_";
 }

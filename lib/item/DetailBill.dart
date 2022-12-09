@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/bill_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
+import 'package:flutter_app_kitchen/service/notification.dart';
 import 'package:provider/provider.dart';
 
 import '../ui/color.dart';
@@ -76,6 +77,11 @@ class _DetailBillState extends State<ListBill> {
                   onPressed: () {
                     setState(() {
                       widget.billModel.isToogleDone();
+
+                      if (!widget.billModel.isDone) {
+                        NotificationKitChen().pushNotification(
+                            "Đơn  ${widget.billModel.table!.name} đã xong");
+                      }
                     });
                   },
                   child: widget.billModel.isDone

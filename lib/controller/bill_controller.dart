@@ -8,11 +8,11 @@ class BillController extends ChangeNotifier {
   BillController({required this.billProvider});
   bool isLoading = true;
   BillModel? billModels;
+  late List<BillModel>? newBill = listBillModel;
 
   Future loadBill() async {
     isLoading = true;
     listBillModel = await billProvider.getBill();
-
     isLoading = false;
     notifyListeners();
   }
@@ -30,6 +30,37 @@ class BillController extends ChangeNotifier {
         .whenComplete(() => Navigator.of(context).pop());
     isLoading = false;
 
+    notifyListeners();
+  }
+
+  billIsDone(BuildContext context) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+    listBillModel = await billProvider.getBill();
+    listBillModel = newBill!.where((element) => element.status == 1).toList();
+    print('dnsajdnshd${listBillModel!.length}');
+    Navigator.of(context).pop();
+    notifyListeners();
+  }
+
+  billIsNotDone(BuildContext context) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+    listBillModel = await billProvider.getBill();
+    listBillModel = newBill!.where((element) => element.status == 0).toList();
+    Navigator.of(context).pop();
     notifyListeners();
   }
 }

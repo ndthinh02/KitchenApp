@@ -15,6 +15,7 @@ class BillPage extends StatefulWidget {
 
 class _ManagerProductPageState extends State<BillPage> {
   BillController get billController => context.read<BillController>();
+  BillController get watchController => context.watch<BillController>();
 
   @override
   void initState() {
@@ -28,7 +29,16 @@ class _ManagerProductPageState extends State<BillPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: colorMain,
-          title: const Text('Quản lý đơn '),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text('Quản lý đơn '),
+              // watchController.listBillModel!.isEmpty
+              //     ? const Text("0")
+              //     : Text('Tổng đơn: ${watchController.listBillModel!.length}')
+            ],
+          ),
+          actions: [_buildMenu()],
         ),
         backgroundColor: colorScafold,
         body: Consumer<BillController>(
@@ -55,5 +65,29 @@ class _ManagerProductPageState extends State<BillPage> {
             );
           },
         ));
+  }
+
+  Widget _buildMenu() {
+    final BillController billController = Provider.of(context);
+    return PopupMenuButton(
+      onSelected: ((value) {
+        if (value == 1) {
+          billController.billIsDone(context);
+        }
+        if (value == 2) {
+          billController.billIsNotDone(context);
+        }
+      }),
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 1,
+          child: Text('Đơn đã xong'),
+        ),
+        const PopupMenuItem(
+          value: 2,
+          child: Text('Đơn chưa xong'),
+        )
+      ],
+    );
   }
 }

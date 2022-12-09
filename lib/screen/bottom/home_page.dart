@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
   int curentItem = 8;
   bool iss = true;
+  late String title;
 
   void _seacrh(String name) {
     setState(() {
@@ -53,7 +54,8 @@ class _HomePageState extends State<HomePage> {
       (message) {
         print("FirebaseMessaging.onMessage.listen");
         if (message.notification != null) {
-          print(message.notification!.title);
+          title = message.notification!.title!;
+          print('ansdbhd$title');
           print(message.notification!.body);
           print("message.data11 ${message.data}");
           NotificationService.createanddisplaynotification(message);
@@ -146,10 +148,15 @@ class _HomePageState extends State<HomePage> {
                                     alignment: Alignment.center,
                                     child: Center(
                                       child: GestureDetector(
-                                        child: Text(
-                                          categoryController
-                                              .mListCategory[index].name,
-                                          style: MyTextStyle().textCategory,
+                                        child: Row(
+                                          children: [
+                                            // const Icon(Icons.circle,color: ,),
+                                            Text(
+                                              categoryController
+                                                  .mListCategory[index].name,
+                                              style: MyTextStyle().textCategory,
+                                            ),
+                                          ],
                                         ),
                                         onTap: () {},
                                       ),
@@ -223,16 +230,29 @@ class _HomePageState extends State<HomePage> {
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: SizedBox(
-                                                    width: 200,
-                                                    child: Text(
-                                                      items[index].name!,
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style:
-                                                          MyTextStyle().textSub,
-                                                    )),
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                        width: 200,
+                                                        child: Text(
+                                                          items[index].name!,
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: MyTextStyle()
+                                                              .textSub,
+                                                        )),
+                                                    Icon(
+                                                      Icons.circle,
+                                                      size: 14,
+                                                      color:
+                                                          items[index].total ==
+                                                                  0
+                                                              ? Colors.red
+                                                              : Colors.green,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               Row(
                                                 mainAxisAlignment:

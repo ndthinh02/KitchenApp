@@ -67,7 +67,15 @@ class DetailPage extends StatelessWidget {
                           'Thể loại: Bánh',
                           style: MyTextStyle().textSub,
                         )
-                      : Text('Thể loại: Đồ uống', style: MyTextStyle().textSub)
+                      : Text('Thể loại: Đồ uống', style: MyTextStyle().textSub),
+                  const SizedBox(height: 14),
+                  product.total == 0
+                      ? Text(
+                          'Tình trạng: Hết hàng',
+                          style: MyTextStyle().textSub,
+                        )
+                      : Text('Tình trạng: Còn hàng',
+                          style: MyTextStyle().textSub),
                 ],
               ))
         ],
