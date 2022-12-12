@@ -3,19 +3,20 @@ import 'package:flutter_app_kitchen/controller/bill_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:provider/provider.dart';
 
+import '../service/notification.dart';
 import '../ui/color.dart';
 import '../ui/text_style.dart';
 
-class ListBill extends StatefulWidget {
+class ListBillNotDone extends StatefulWidget {
   BillModel billModel;
   int index;
-  ListBill({super.key, required this.billModel, required this.index});
+  ListBillNotDone({super.key, required this.billModel, required this.index});
 
   @override
-  State<ListBill> createState() => _DetailBillState();
+  State<ListBillNotDone> createState() => _DetailBillState();
 }
 
-class _DetailBillState extends State<ListBill> {
+class _DetailBillState extends State<ListBillNotDone> {
   BillModel get readBill => context.read<BillModel>();
   BillModel get watchBill => context.watch<BillModel>();
   BillController get billController => context.read<BillController>();
@@ -65,25 +66,28 @@ class _DetailBillState extends State<ListBill> {
               ),
               const SizedBox(height: 14),
               SizedBox(
-                  width: 140,
-                  height: 40,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: colorMain,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50))),
-                      onPressed: () {
-                        setState(() {
-                          widget.billModel.isToogleDone();
-                          if (widget.billModel.isDone) {
-                            // NotificationKitChen().pushNotification(
-                            //     "Đơn  ${widget.billModel.table!.name} đã xong");
-                            // billController.updateBill(
-                            //     widget.billModel.sId, 1, context, widget.index);
-                          }
-                        });
-                      },
-                      child: const Text('Đã hoàn thành'))),
+                width: 140,
+                height: 40,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: colorMain,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50))),
+                    onPressed: () {
+                      setState(() {
+                        widget.billModel.isToogleDone();
+                        if (widget.billModel.isDone) {
+                          NotificationKitChen().pushNotification(
+                              "Đơn  ${widget.billModel.table!.name} đã xong");
+                          billController.updateBill(
+                              widget.billModel.sId, 1, context, widget.index);
+                        }
+                      });
+                    },
+                    child: !widget.billModel.isDone
+                        ? const Text("Chưa hoàn thành")
+                        : const Text("Đã hoàn thành")),
+              ),
             ],
           ),
         ),

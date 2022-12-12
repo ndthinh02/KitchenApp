@@ -18,6 +18,7 @@ class BillModel extends ChangeNotifier {
 
   void isToogleDone() {
     isDone = !isDone;
+    print('ndsajndjsndj$isDone');
     notifyListeners();
   }
 

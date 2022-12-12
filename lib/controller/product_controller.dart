@@ -36,8 +36,6 @@ class ProductController extends ChangeNotifier {
     isLoading = true;
     mListProduct = listFilterProduct = await productProvider?.getProduct();
     isLoading = false;
-    // print('listttttttttttttMLIST${mListProduct!.length}');
-    // print('listttttttttttttfilter${listFilterProduct!.length}');
     notifyListeners();
   }
 

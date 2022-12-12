@@ -4,63 +4,32 @@ import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
 
 class BillController extends ChangeNotifier {
   List<BillModel>? listBillModel;
-  final BillProvider billProvider;
+  final BillProvider? billProvider;
   BillController({required this.billProvider});
   bool isLoading = true;
   BillModel? billModels;
-  late List<BillModel>? newBill = listBillModel;
+  List<BillModel>? listBillIsNotDone;
 
-  Future loadBill() async {
+  Future loadBillDone() async {
     isLoading = true;
-    listBillModel = await billProvider.getBill();
+    listBillModel = await billProvider?.getBillDone();
     isLoading = false;
     notifyListeners();
   }
 
-  Future updateBill(String? id, int status, BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+  Future loadBillNotDone() async {
     isLoading = true;
-    billModels = await billProvider
-        .updateStatusBill(id, status)
-        .whenComplete(() => Navigator.of(context).pop());
+    listBillIsNotDone = await billProvider?.getBillNotDone();
     isLoading = false;
-
     notifyListeners();
   }
 
-  billIsDone(BuildContext context) async {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-    listBillModel = await billProvider.getBill();
-    listBillModel = newBill!.where((element) => element.status == 1).toList();
-    print('dnsajdnshd${listBillModel!.length}');
-    Navigator.of(context).pop();
-    notifyListeners();
-  }
-
-  billIsNotDone(BuildContext context) async {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-    listBillModel = await billProvider.getBill();
-    listBillModel = newBill!.where((element) => element.status == 0).toList();
-    Navigator.of(context).pop();
+  Future updateBill(
+      String? id, int status, BuildContext context, int index) async {
+    isLoading = true;
+    billModels = await billProvider!.updateStatusBill(id, status);
+    isLoading = false;
+    listBillIsNotDone!.removeAt(index);
     notifyListeners();
   }
 }

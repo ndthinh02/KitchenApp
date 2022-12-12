@@ -6,11 +6,28 @@ import '../../config/api_key.dart';
 import '../../model/bill_model.dart';
 
 class BillProvider extends DioForNative with ChangeNotifier {
-  Future<List<BillModel>?> getBill() async {
+  Future<List<BillModel>?> getBillDone() async {
     try {
       final resp = await get(AppKey.urlGetBill);
       var getDataBill = resp.data as List;
-      return getDataBill.map((e) => BillModel.fromJson(e)).toList();
+      return getDataBill
+          .map((e) => BillModel.fromJson(e))
+          .where((element) => element.status == 1)
+          .toList();
+    } on DioError catch (e) {
+      print(e.message);
+    }
+    return null;
+  }
+
+  Future<List<BillModel>?> getBillNotDone() async {
+    try {
+      final resp = await get(AppKey.urlGetBill);
+      var getDataBill = resp.data as List;
+      return getDataBill
+          .map((e) => BillModel.fromJson(e))
+          .where((element) => element.status == 0)
+          .toList();
     } on DioError catch (e) {
       print(e.message);
     }
