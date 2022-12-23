@@ -29,8 +29,6 @@ class User {
 
   logout(BuildContext context) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? account = pref.getString('account');
-
     pref.remove('account');
     // ignore: use_build_context_synchronously
     Navigator.pushReplacement(

@@ -4,7 +4,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
-import 'package:flutter_app_kitchen/service/notification.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -103,8 +102,6 @@ class AddProductController extends ChangeNotifier {
             .whenComplete(() => Fluttertoast.showToast(
                 msg: "Thêm thành công", gravity: ToastGravity.TOP))
             .whenComplete(() => file = null)
-            .whenComplete(() => NotificationKitChen().pushNotification(
-                'Nha bep  vua them ${nameProductController.text}'))
             .whenComplete(() => Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => const MyHomePage())));
 

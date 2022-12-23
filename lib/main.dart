@@ -7,9 +7,11 @@ import 'package:flutter_app_kitchen/controller/category_controller.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
+import 'package:flutter_app_kitchen/provider/notification/notification_provider.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
 import 'package:flutter_app_kitchen/provider/staff/staff_provider.dart';
 import 'package:flutter_app_kitchen/provider/user.dart';
+import 'package:flutter_app_kitchen/service/check_internet.dart';
 import 'package:flutter_app_kitchen/service/notification_service.dart';
 import 'package:provider/provider.dart';
 
@@ -53,6 +55,17 @@ Future<void> main() async {
     ChangeNotifierProvider(
       create: ((context) => CategoryController()),
     ),
+    ChangeNotifierProvider(
+      create: ((context) =>
+          NotificationProvider(productProvider: ProductProvider())),
+    ),
+    StreamProvider(
+      create: ((context) {
+        NetworkStatusService().networkStatusController.stream;
+        return null;
+      }),
+      initialData: NetworkStatus.Online,
+    )
   ], child: const MyApp()));
 }
 

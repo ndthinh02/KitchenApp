@@ -5,6 +5,8 @@ import 'package:dio/native_imp.dart';
 import 'package:flutter_app_kitchen/config/api_key.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 
+import '../model/notification.dart';
+
 class ProductProvider extends DioForNative {
   final List<ProductModel> _allProduct = [];
   Future<List<ProductModel>?> getProduct() async {
@@ -109,6 +111,19 @@ class ProductProvider extends DioForNative {
       return getDataProduct.map((e) => ProductModel.fromJson(e)).toList();
     } on DioError catch (dioErr) {
       print(dioErr.error);
+    }
+    return null;
+  }
+
+  Future<List<Notifications>?> getNotification(String idStaff) async {
+    try {
+      final resp = await get(
+          "https://restaurant-server-eight.vercel.app/restaurant/api/notification/receiver/$idStaff");
+      var getData = resp.data as List;
+      print('dnsjdnj$getData');
+      return getData.map((e) => Notifications.fromJson(e)).toList();
+    } on DioError catch (e) {
+      print(e.message);
     }
     return null;
   }

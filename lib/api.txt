@@ -1,76 +1,77 @@
-// For foods
-[GET] foods: https://restaurant-server-eight.vercel.app/restaurant/api/foods
+* =============== Staff ===============*
 
-// For drinks
-[GET] drinks: https://restaurant-server-eight.vercel.app/restaurant/api/drinks
+-  All staff: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/staff/all
+-  Create staff: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/staff/create
+-  Update staff:  [PUT] https://restaurant-server-eight.vercel.app/restaurant/api/staff/update/:id?_method=PUT
+	+ Body (account, password, name, phoneNumber, gender, role, floor, tokenFCM)
+	(Body dùng chung cho cả create)
+-  Delete staff: [DELETE] https://restaurant-server-eight.vercel.app/restaurant/api/staff/delete/:id?_method=DELETE
+-  Login staff: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/staff/login
+	+ Body(account, password, tokenFCM)
 
-// For update foods and drinks by id
-[GET] products: https://restaurant-server-eight.vercel.app/restaurant/api/products/all
+*=============== Table ================*
 
-[GET] products: https://restaurant-server-eight.vercel.app/restaurant/api/products/all/:category
+- Get all table by floor: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/table/all/:floor
+- Get all table: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/table/all
+- Get table by floor and status: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/table
+	+ Query (floor, status)
+- Create table: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/table/all
+- Update table: [PUT] https://restaurant-server-eight.vercel.app/restaurant/api/table/update/:id?_method=PUT
+	+ Body (name, capacity, floor, status) 
+	+ Body chung với create 
 
-[PUT] products:  https://restaurant-server-eight.vercel.app/restaurant/api/products/:id?_method=PUT
+*============== Product ===============*
 
-[DELETE] products: https://restaurant-server-eight.vercel.app/restaurant/api/products/:id?_method=DELETE
+- Get foods: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/foods
+- Get drinks: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/drinks
+- Get all products: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/products/all
+- Get by category: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/products/all/:category
+- Create product: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/product/create
+- Update product: [PUT] https://restaurant-server-eight.vercel.app/restaurant/api/products/:id?_method=PUT
+- Delete product: [DELETE] https://restaurant-server-eight.vercel.app/restaurant/api/products/:id?_method=DELETE
+	+ Body ( name, urlImage, type, total, price, description, amount, idCategory )
 
-=================================================
+*============== Floor =================*
 
-// Add product
-[POST] product: https://restaurant-server-eight.vercel.app/restaurant/api/product/create
+- Get food: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/foods
 
-//Table
-[GET] table: https://restaurant-server-eight.vercel.app/restaurant/api/table/all/{floor}
+*============== Feedback ==============*
 
-[POST] table: https://restaurant-server-eight.vercel.app/restaurant/api/table/create
+- Get all feedback: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/feedback/all
+- Create feadback: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/feedback/create
 
-[GET] table: https://restaurant-server-eight.vercel.app/restaurant/api/table/all
+*=============== Bill ================*
 
-//Floor
-[GET] floor: https://restaurant-server-eight.vercel.app/restaurant/api/floor/all
+- Get all bill: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/bill/all
+- Get bill by id: [GET] [GET] https://restaurant-server-eight.vercel.app/restaurant/api/bill?id=id
+	+ Query(id)
+- Get one bill lastest by id table: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable
+- Get bill by status: [GET]  https://restaurant-server-eight.vercel.app/restaurant/api/bill/all/:status
+- Create bill: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/bill/create
+	+ Body(date, time, totalPrice, status, checkoutType, foods, table, idCustomer, staff)
+- Update bill: [PUT] https://restaurant-server-eight.vercel.app/restaurant/api/bill/update/:id?_method=PUT
+	+ Body như create, Param(id)
+- Add product in bill: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/bill/product/add/:idBill
+	+ Body của product, Query(idBill)
+- Delete product: [DELETE] https://restaurant-server-eight.vercel.app/restaurant/api/bill/:id/:product?_method=DELETE
 
-[POST] floor: https://restaurant-server-eight.vercel.app/restaurant/api/floor/create
+- Get list product in bill: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable/product
+	+Params(idTable)
+- Filter bill already paid (History): [POST]  https://restaurant-server-eight.vercel.app/restaurant/api/bill/filter/:idTable
+	+ Body(status, firstDate, secondDate, floor, idStaff), Params (idTable)
+- Check bill if exist: [GET] https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable/check
+- Get Bill live by floor: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/bill/live/:idStaff
+	+ Body(numberFloor), Params(idStaff)
 
-// Staff
-[GET] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/all
+- Get Bill live by floor(Specifically by status): [POST] https://restaurant-server-eight.vercel.app/restaurant/api/bill/live/:status
+	+ Body(numberFloor, idStaff), Params(status)
 
-[POST] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/create
-
-[PUT] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/update/:id?_method=PUT
-
-[DELETE] staff: https://restaurant-server-eight.vercel.app/restaurant/api/staff/delete/:id?_method=DELETE
-
-[POST] login:  https://restaurant-server-eight.vercel.app/restaurant/api/staff/login
-
-// Bill
-[GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/all
-
-[GET] bill by status: https://restaurant-server-eight.vercel.app/restaurant/api/bill/all/:status
-
-[GET] product in bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable/product
-
-[POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/create
-
-[GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/:idTable
-
-[PUT] bill: https://restaurant-server-eight.vercel.app/restaurant/api/bill/update/:id?_method=PUT
-
-[POST] add product to bill: https://restaurant-server-eight.vercel.app/restaurant/api//bill/product/add/:idBill
-
-// History:
-
-[GET] all: https://restaurant-server-eight.vercel.app/restaurant/api/history/all
-
-[POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/history/create
-
-[GET] bill: https://restaurant-server-eight.vercel.app/restaurant/api/history/:id
-
-
-// Notification:
-
-[GET] all: https://restaurant-server-eight.vercel.app/restaurant/api/notification/:idStaff
+*================= Notify ===============*
+- Push notify: [POST] https://restaurant-server-eight.vercel.app/restaurant/api/bill/notify
+	+ Body(title, content, idBill, tokenFCM)
+	//[GET] all: https://restaurant-server-eight.vercel.app/restaurant/api/notification/:idStaff
 
 [POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/notification/create
 
 
-=====> Results returned for each [PUT], [DELETE],[POST] :
-{"message":  " ' Method' successfully "}
+

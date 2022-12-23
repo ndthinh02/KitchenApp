@@ -8,14 +8,12 @@ class BillModel extends ChangeNotifier {
   num? status;
   num? checkoutType;
   List<Foods>? foods;
-  Table? table;
-  String? idCustomer;
-  String? idStaff;
+  TableBill? table;
+  Staff? staff;
   String? createdAt;
   String? updatedAt;
   num? iV;
   bool isDone = false;
-
   void isToogleDone() {
     isDone = !isDone;
     print('ndsajndjsndj$isDone');
@@ -31,12 +29,10 @@ class BillModel extends ChangeNotifier {
       this.checkoutType,
       this.foods,
       this.table,
-      this.idCustomer,
-      this.idStaff,
+      this.staff,
       this.createdAt,
       this.updatedAt,
-      this.iV,
-      this.isDone = false});
+      this.iV});
 
   BillModel.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -51,9 +47,8 @@ class BillModel extends ChangeNotifier {
         foods!.add(Foods.fromJson(v));
       });
     }
-    table = json['table'] != null ? Table.fromJson(json['table']) : null;
-    idCustomer = json['idCustomer'];
-    idStaff = json['idStaff'];
+    table = json['table'] != null ? TableBill.fromJson(json['table']) : null;
+    staff = json['staff'] != null ? Staff.fromJson(json['staff']) : null;
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     iV = json['__v'];
@@ -73,8 +68,9 @@ class BillModel extends ChangeNotifier {
     if (table != null) {
       data['table'] = table!.toJson();
     }
-    data['idCustomer'] = idCustomer;
-    data['idStaff'] = idStaff;
+    if (staff != null) {
+      data['staff'] = staff!.toJson();
+    }
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['__v'] = iV;
@@ -135,25 +131,28 @@ class Foods {
   }
 }
 
-class Table {
+class TableBill {
   String? name;
   num? capacity;
+  num? floor;
   num? status;
   String? sId;
   String? createdAt;
   String? updatedAt;
 
-  Table(
+  TableBill(
       {this.name,
       this.capacity,
+      this.floor,
       this.status,
       this.sId,
       this.createdAt,
       this.updatedAt});
 
-  Table.fromJson(Map<String, dynamic> json) {
+  TableBill.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     capacity = json['capacity'];
+    floor = json['floor'];
     status = json['status'];
     sId = json['_id'];
     createdAt = json['createdAt'];
@@ -164,10 +163,89 @@ class Table {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['capacity'] = capacity;
+    data['floor'] = floor;
     data['status'] = status;
     data['_id'] = sId;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
+    return data;
+  }
+}
+
+class Staff {
+  String? account;
+  String? password;
+  String? name;
+  String? phoneNumber;
+  num? gender;
+  num? role;
+  Floor? floor;
+  String? tokenFCM;
+  String? sId;
+  String? createdAt;
+  String? updatedAt;
+
+  Staff(
+      {this.account,
+      this.password,
+      this.name,
+      this.phoneNumber,
+      this.gender,
+      this.role,
+      this.floor,
+      this.tokenFCM,
+      this.sId,
+      this.createdAt,
+      this.updatedAt});
+
+  Staff.fromJson(Map<String, dynamic> json) {
+    account = json['account'];
+    password = json['password'];
+    name = json['name'];
+    phoneNumber = json['phoneNumber'];
+    gender = json['gender'];
+    role = json['role'];
+    floor = json['floor'] != null ? Floor.fromJson(json['floor']) : null;
+    tokenFCM = json['tokenFCM'];
+    sId = json['_id'];
+    createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['account'] = account;
+    data['password'] = password;
+    data['name'] = name;
+    data['phoneNumber'] = phoneNumber;
+    data['gender'] = gender;
+    data['role'] = role;
+    if (floor != null) {
+      data['floor'] = floor!.toJson();
+    }
+    data['tokenFCM'] = tokenFCM;
+    data['_id'] = sId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    return data;
+  }
+}
+
+class Floor {
+  int? numberFloor;
+  String? sId;
+
+  Floor({this.numberFloor, this.sId});
+
+  Floor.fromJson(Map<String, dynamic> json) {
+    numberFloor = json['numberFloor'];
+    sId = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['numberFloor'] = numberFloor;
+    data['_id'] = sId;
     return data;
   }
 }

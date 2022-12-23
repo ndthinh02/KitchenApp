@@ -7,22 +7,23 @@ class StaffController extends ChangeNotifier {
   final StaffProvider staffProvider;
   StaffController({required this.staffProvider});
   bool isLoading = true;
+  List<Staff>? _listStaff;
 
   Future loadStaff(String account, String pass, String tokenFCM,
       BuildContext context) async {
     isLoading = true;
-    mListStaff = await staffProvider.getStaff(account, pass, tokenFCM, context);
-    print('hehehe $mListStaff');
+    mListStaff =
+        await staffProvider.loginStaff(account, pass, tokenFCM, context);
     isLoading = false;
     notifyListeners();
   }
 
-  // String get passStaff {
-  //   String pass = '';
-  //   mListStaff?.forEach((element) {
-  //     pass = element.password!;
-  //     print('nameStaff${name}');
-  //   });
-  //   return pass;
+  // Future getStaff(String account, String pass, String tokenFCM,
+  //     BuildContext context) async {
+  //   isLoading = true;
+  //   mListStaff =
+  //       await staffProvider.loginStaff(account, pass, tokenFCM, context);
+  //   isLoading = false;
+  //   notifyListeners();
   // }
 }

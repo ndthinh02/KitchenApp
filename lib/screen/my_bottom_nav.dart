@@ -52,21 +52,25 @@ class _MyHomePageState extends State<MyHomePage> {
             // ignore: prefer_const_literals_to_create_immutables
             tabs: [
               const GButton(
+                hoverColor: Colors.amber,
                 backgroundColor: Colors.transparent,
                 icon: Icons.home_outlined,
                 text: 'Home',
               ),
               const GButton(
+                hoverColor: Colors.amber,
                 backgroundColor: Colors.transparent,
                 icon: Icons.notifications_outlined,
                 text: 'Thông báo',
               ),
               const GButton(
+                hoverColor: Colors.amber,
                 backgroundColor: Colors.transparent,
                 icon: Icons.today_outlined,
                 text: 'Quản lý đơn',
               ),
               const GButton(
+                hoverColor: Colors.amber,
                 backgroundColor: Colors.transparent,
                 icon: (Icons.person_outline_outlined),
                 text: 'Cá nhân',

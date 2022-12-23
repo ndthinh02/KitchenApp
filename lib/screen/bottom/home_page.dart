@@ -22,8 +22,6 @@ class _HomePageState extends State<HomePage> {
   CategoryController get categoryController =>
       context.read<CategoryController>();
   final ScrollController _scrollController = ScrollController();
-  int curentItem = 8;
-  bool iss = true;
   late String title;
 
   void _seacrh(String name) {
@@ -77,268 +75,283 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  final double _height = 300;
+  int? _destinationIndex;
+  void _scrollToIndex(index) {
+    _scrollController.animateTo(_height * index,
+        duration: const Duration(seconds: 6), curve: Curves.easeIn);
+  }
+
   @override
   Widget build(BuildContext context) {
     // getDeviceTokenToSendNotification();
     // productController.getCategory();
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Container(
-            margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(10),
-            child: TextField(
-              onChanged: (value) => _seacrh(value),
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  hintText: "Tìm kiếm sản phẩm"),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Container(
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
+          child: TextField(
+            onChanged: (value) => _seacrh(value),
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: "Tìm kiếm sản phẩm"),
+          ),
+        ),
+        backgroundColor: colorMain,
+        actions: [
+          Row(
+            children: [
+              const Icon(Icons.search),
+              _builPopupMenu(context),
+            ],
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: List.generate(
+                  categoryController.mListCategory.length,
+                  (index) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            switch (index) {
+                              case 0:
+                                productController.getCategory(context, 1);
+                                break;
+                              case 1:
+                                productController.getCategory(context, 2);
+                                break;
+                              case 2:
+                                productController.getCategory(context, 5);
+                                break;
+                              case 3:
+                                productController.getCategory(context, 4);
+                                break;
+                            }
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.amber,
+                                  image: DecorationImage(
+                                      image: categoryController
+                                          .mListCategory[index].image,
+                                      fit: BoxFit.cover)),
+                              width: 200,
+                              height: 70,
+                              margin: const EdgeInsets.only(right: 10),
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Center(
+                                    child: GestureDetector(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // const Icon(Icons.circle,color: ,),
+                                          Text(
+                                            categoryController
+                                                .mListCategory[index].name,
+                                            style: MyTextStyle().textCategory,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () {},
+                                    ),
+                                  ))),
+                        ),
+                      )),
             ),
           ),
-          backgroundColor: colorMain,
-          actions: [
-            Row(
-              children: [
-                const Icon(Icons.search),
-                _builPopupMenu(context),
-              ],
-            )
-          ],
-        ),
-        body: Column(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: List.generate(
-                    categoryController.mListCategory.length,
-                    (index) => Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  Consumer<ProductController>(
+                      builder: (context, provider, child) {
+                    if (provider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final items = provider.mListProduct!;
+                    if (items.isEmpty) {
+                      return const Text(
+                        'Không có sản phẩm',
+                        style: TextStyle(color: Colors.black),
+                      );
+                    }
+                    return ListView.builder(
+                        controller: _scrollController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: items.length,
+                        itemBuilder: ((context, index) {
+                          return GestureDetector(
                             onTap: () {
-                              switch (index) {
-                                case 0:
-                                  productController.getCategory(context, 1);
-                                  break;
-                                case 1:
-                                  productController.getCategory(context, 2);
-                                  break;
-                                case 2:
-                                  productController.getCategory(context, 5);
-                                  break;
-                                case 3:
-                                  productController.getCategory(context, 4);
-                                  break;
-                              }
+                              Navigator.of(context).push(CreateRoute()
+                                  .createAnimationDetailPage(items[index]));
                             },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.amber,
-                                    image: DecorationImage(
-                                        image: categoryController
-                                            .mListCategory[index].image,
-                                        fit: BoxFit.cover)),
-                                width: 200,
-                                height: 70,
-                                margin: const EdgeInsets.only(right: 10),
-                                child: Align(
-                                    alignment: Alignment.center,
-                                    child: Center(
-                                      child: GestureDetector(
-                                        child: Row(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: double.infinity,
+                                    height: 170,
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14)),
+                                      elevation: 10,
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          productController.deleteProduct(
+                                              items[index].sId!,
+                                              index,
+                                              context);
+                                        },
+                                        icon: const Icon(Icons.clear)),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 20, left: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            // const Icon(Icons.circle,color: ,),
-                                            Text(
-                                              categoryController
-                                                  .mListCategory[index].name,
-                                              style: MyTextStyle().textCategory,
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        items[index].name!,
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: MyTextStyle()
+                                                            .textSub,
+                                                      )),
+                                                  Icon(
+                                                    Icons.circle,
+                                                    size: 14,
+                                                    color:
+                                                        items[index].total == 0
+                                                            ? Colors.red
+                                                            : Colors.green,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(14),
+                                                  child: ImageFade(
+                                                    width: 200,
+                                                    height: 150,
+                                                    image: NetworkImage(provider
+                                                        .mListProduct![index]
+                                                        .urlImage!),
+                                                    alignment: Alignment.center,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: Container(
+                                                      color: const Color(
+                                                          0xFFCFCDCA),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Icon(
+                                                          Icons.photo,
+                                                          color: Colors.white30,
+                                                          size: 128.0),
+                                                    ),
+
+                                                    // shows progress while loading an image:
+                                                    loadingBuilder: (context,
+                                                            progress,
+                                                            chunkEvent) =>
+                                                        const Center(
+                                                            child:
+                                                                CircularProgressIndicator()),
+
+                                                    // displayed when an error occurs:
+                                                    errorBuilder:
+                                                        (context, error) =>
+                                                            Container(
+                                                      color: const Color(
+                                                          0xFF6F6D6A),
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: const Icon(
+                                                          Icons.warning,
+                                                          color: Colors.black26,
+                                                          size: 128.0),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'Giá: ${items[index].price!}\$',
+                                                    style:
+                                                        MyTextStyle().textPrice,
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           ],
                                         ),
-                                        onTap: () {},
-                                      ),
-                                    ))),
-                          ),
-                        )),
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Consumer<ProductController>(
-                        builder: (context, provider, child) {
-                      if (provider.isLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      final items = provider.mListProduct!;
-                      if (items.isEmpty) {
-                        return const Text(
-                          'Không có sản phẩm',
-                          style: TextStyle(color: Colors.black),
-                        );
-                      }
-                      return ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: items.length,
-                          itemBuilder: ((context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).push(CreateRoute()
-                                    .createAnimationDetailPage(items[index]));
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Stack(
-                                  children: <Widget>[
-                                    SizedBox(
-                                      width: double.infinity,
-                                      height: 170,
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(14)),
-                                        elevation: 10,
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: IconButton(
-                                          onPressed: () {
-                                            productController.deleteProduct(
-                                                items[index].sId!,
-                                                index,
-                                                context);
-                                          },
-                                          icon: const Icon(Icons.clear)),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.bottomLeft,
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 20, left: 10),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Row(
-                                                  children: [
-                                                    SizedBox(
-                                                        width: 200,
-                                                        child: Text(
-                                                          items[index].name!,
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: MyTextStyle()
-                                                              .textSub,
-                                                        )),
-                                                    Icon(
-                                                      Icons.circle,
-                                                      size: 14,
-                                                      color:
-                                                          items[index].total ==
-                                                                  0
-                                                              ? Colors.red
-                                                              : Colors.green,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            14),
-                                                    child: ImageFade(
-                                                      width: 200,
-                                                      height: 150,
-                                                      image: NetworkImage(
-                                                          provider
-                                                              .mListProduct![
-                                                                  index]
-                                                              .urlImage!),
-                                                      alignment:
-                                                          Alignment.center,
-                                                      fit: BoxFit.cover,
-                                                      placeholder: Container(
-                                                        color: const Color(
-                                                            0xFFCFCDCA),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: const Icon(
-                                                            Icons.photo,
-                                                            color:
-                                                                Colors.white30,
-                                                            size: 128.0),
-                                                      ),
-
-                                                      // shows progress while loading an image:
-                                                      loadingBuilder: (context,
-                                                              progress,
-                                                              chunkEvent) =>
-                                                          const Center(
-                                                              child:
-                                                                  CircularProgressIndicator()),
-
-                                                      // displayed when an error occurs:
-                                                      errorBuilder:
-                                                          (context, error) =>
-                                                              Container(
-                                                        color: const Color(
-                                                            0xFF6F6D6A),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: const Icon(
-                                                            Icons.warning,
-                                                            color:
-                                                                Colors.black26,
-                                                            size: 128.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
-                                                      'Giá: ${items[index].price!}\$',
-                                                      style: MyTextStyle()
-                                                          .textPrice,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                  )
+                                ],
                               ),
-                            );
-                          }));
-                    })
-                  ],
-                ),
+                            ),
+                          );
+                        }));
+                  })
+                ],
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: colorMain,
+        onPressed: () async {
+          setState(() {
+            _destinationIndex = productController.mListProduct!
+                .lastIndexOf(productController.mListProduct!.last);
+          });
+          _scrollToIndex(_destinationIndex);
+        },
+        child: const Icon(Icons.arrow_downward),
+      ),
+    );
   }
 }
 

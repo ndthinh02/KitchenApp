@@ -1,16 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/bill_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import '../service/notification.dart';
 import '../ui/color.dart';
 import '../ui/text_style.dart';
 
 class ListBillNotDone extends StatefulWidget {
   BillModel billModel;
   int index;
-  ListBillNotDone({super.key, required this.billModel, required this.index});
+  Staff staff;
+  ListBillNotDone(
+      {super.key,
+      required this.billModel,
+      required this.index,
+      required this.staff});
 
   @override
   State<ListBillNotDone> createState() => _DetailBillState();
@@ -20,6 +27,23 @@ class _DetailBillState extends State<ListBillNotDone> {
   BillModel get readBill => context.read<BillModel>();
   BillModel get watchBill => context.watch<BillModel>();
   BillController get billController => context.read<BillController>();
+  final StreamController _streamController = StreamController();
+  String idStaff = "";
+  getIdStaff() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      idStaff = pref.getString("id")!;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    billController.loadBillNotDone();
+    getIdStaff();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,7 +82,7 @@ class _DetailBillState extends State<ListBillNotDone> {
                       Text(
                         '\$ ${widget.billModel.totalPrice}',
                         style: MyTextStyle().textPrice,
-                      ),
+                      )
                     ],
                   ),
                   Text(widget.billModel.date.toString())
@@ -74,19 +98,20 @@ class _DetailBillState extends State<ListBillNotDone> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50))),
                     onPressed: () {
-                      setState(() {
-                        widget.billModel.isToogleDone();
-                        if (widget.billModel.isDone) {
-                          NotificationKitChen().pushNotification(
-                              "Đơn  ${widget.billModel.table!.name} đã xong");
-                          billController.updateBill(
-                              widget.billModel.sId, 1, context, widget.index);
-                        }
-                      });
+                      final items = widget.billModel;
+                      billController.updateBill(
+                          items.sId,
+                          context,
+                          widget.index,
+                          items.table!.sId!,
+                          items.staff!.tokenFCM!,
+                          items.sId!,
+                          items.table!.floor.toString(),
+                          items.table!.name!,
+                          items.staff!.sId!,
+                          widget.staff);
                     },
-                    child: !widget.billModel.isDone
-                        ? const Text("Chưa hoàn thành")
-                        : const Text("Đã hoàn thành")),
+                    child: const Text("Chưa hoàn thành")),
               ),
             ],
           ),

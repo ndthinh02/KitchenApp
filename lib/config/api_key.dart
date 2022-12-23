@@ -24,4 +24,8 @@ class AppKey {
       "key=AAAA2yMgnic:APA91bG9frncZOF3uRMTnq0A856HPT1Gxhb-d1UFBEhFsN8-5ALbCA2mtdzhjYjXUNVz94cCOkihqcoKpToXEg3toxBye4NirV_DkX8pOKir9m2hjKbdm3xpZHVe4P7MrAEyR7v3r71I";
   static String tokenDevice =
       "dTKEeNa0QdOK-m0_NROzsl:APA91bHya_ttWelcBJUKidukxlU0ocK-pHbh9eaWJ8mj81BqV6c00A55RVxSr9fuH4itQmwZHYsSoAPXDggDHS9ONs7NcHAoi0ovverLzX26CaKC4aFSMg3KqEZZ8kwCkvUgWXD8vXQ_";
+  static String getStaff =
+      "https://restaurant-server-eight.vercel.app/restaurant/api/staff/all";
+  static String getNotification =
+      "https://restaurant-server-eight.vercel.app/restaurant/api/notification/:idStaff";
 }

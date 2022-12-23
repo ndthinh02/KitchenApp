@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 import 'package:flutter_app_kitchen/screen/manager/add_product_page.dart';
+import 'package:flutter_app_kitchen/screen/manager/seacrh_bill.dart';
 import 'package:flutter_app_kitchen/screen/manager/update_page.dart';
 import 'package:flutter_app_kitchen/screen/my_bottom_nav.dart';
 
@@ -13,6 +14,25 @@ class CreateRoute {
     return PageRouteBuilder(
       pageBuilder: ((context, animation, secondaryAnimation) =>
           const MyHomePage()),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Route createAnimationSearchBill() {
+    return PageRouteBuilder(
+      pageBuilder: ((context, animation, secondaryAnimation) =>
+          const SearchBill()),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;

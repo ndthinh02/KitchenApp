@@ -108,18 +108,6 @@ class _MyHomePageState extends State<LoginPage> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Liên hệ với quản lý',
-                    style: MyTextStyle().textManager,
-                  )
-                ],
-              ),
-            ),
             const SizedBox(height: 20),
             Consumer<StaffController>(builder: ((context, provider, child) {
               return SizedBox(
@@ -142,6 +130,8 @@ class _MyHomePageState extends State<LoginPage> {
                               await SharedPreferences.getInstance();
                           pref.setString(
                               "account", textUserNameController.text);
+                          pref.setString("password", textPasstroller.text);
+                          pref.setString("tokenFCM", tokenFCM);
                           provider.loadStaff(textUserNameController.text,
                               textPasstroller.text, tokenFCM, context);
                         }

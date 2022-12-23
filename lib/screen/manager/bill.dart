@@ -18,21 +18,6 @@ class _ManagerProductPageState extends State<BillPage>
   BillController get watchController => context.watch<BillController>();
 
   @override
-  void initState() {
-    super.initState();
-    billController.loadBillDone();
-    billController.loadBillNotDone();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    billController.loadBillDone();
-    billController.loadBillNotDone();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 2,
@@ -52,38 +37,14 @@ class _ManagerProductPageState extends State<BillPage>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text('Quản lý đơn '),
-                  // watchController.listBillModel!.isEmpty
-                  //     ? const Text("0")
-                  //     : Text('Tổng đơn: ${watchController.listBillModel!.length}')
                 ],
               ),
-              actions: [_buildMenu()],
             ),
             backgroundColor: colorScafold,
             body: const TabBarView(children: [
               BillNotDone(),
               BillDone(),
             ])));
-  }
-
-  Widget _buildMenu() {
-    final BillController billController = Provider.of(context);
-    return PopupMenuButton(
-      onSelected: ((value) {
-        if (value == 1) {}
-        if (value == 2) {}
-      }),
-      itemBuilder: (context) => [
-        const PopupMenuItem(
-          value: 1,
-          child: Text('Đơn đã xong'),
-        ),
-        const PopupMenuItem(
-          value: 2,
-          child: Text('Đơn chưa xong'),
-        )
-      ],
-    );
   }
 
   @override
