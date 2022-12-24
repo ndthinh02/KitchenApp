@@ -33,6 +33,7 @@ class _DetailBillState extends State<ListBillNotDone> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       idStaff = pref.getString("id")!;
+      billController.loadBillNotDone();
     });
   }
 
@@ -40,7 +41,7 @@ class _DetailBillState extends State<ListBillNotDone> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    billController.loadBillNotDone();
+
     getIdStaff();
   }
 
@@ -99,6 +100,9 @@ class _DetailBillState extends State<ListBillNotDone> {
                             borderRadius: BorderRadius.circular(50))),
                     onPressed: () {
                       final items = widget.billModel;
+                      num totalNow = items.foods![widget.index].total! -
+                          items.foods![widget.index].amount!;
+                      print('heheh$totalNow');
                       billController.updateBill(
                           items.sId,
                           context,
@@ -109,7 +113,9 @@ class _DetailBillState extends State<ListBillNotDone> {
                           items.table!.floor.toString(),
                           items.table!.name!,
                           items.staff!.sId!,
-                          widget.staff);
+                          widget.staff,
+                          totalNow,
+                          items.foods![widget.index].sId!);
                     },
                     child: const Text("Chưa hoàn thành")),
               ),

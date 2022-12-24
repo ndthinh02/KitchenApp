@@ -28,7 +28,7 @@ class _ManagerProductPageState extends State<BillPage>
                   text: "Đơn chưa hoàn thành",
                 ),
                 Tab(
-                  text: "Đơn dã hoàn thành",
+                  text: "Đơn đã hoàn thành",
                 ),
               ]),
               automaticallyImplyLeading: false,

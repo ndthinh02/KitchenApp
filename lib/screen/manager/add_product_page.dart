@@ -18,10 +18,23 @@ class _AddProductPageState extends State<AddProductPage> {
   AddProductController get provider => context.read<AddProductController>();
   AddProductController get watchProvider =>
       context.watch<AddProductController>();
+  var items = [
+    'Món chính',
+    'Món phụ',
+    'Đồ uống',
+    'Trái cây',
+  ];
+  String dropDefault = "Món chính";
+  int? type;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    setState(() {
+      if (dropDefault == "Món chính") {
+        type = 2;
+      }
+    });
   }
 
   @override
@@ -42,7 +55,94 @@ class _AddProductPageState extends State<AddProductPage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: buildForm(),
+                      child: Form(
+                          key: _formKey,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Hãy nhập đầy đủ';
+                                    }
+                                    return null;
+                                  },
+                                  controller: provider.nameProductController,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      hintText: "Tên sản phẩm",
+                                      labelText: "Tên sản phẩm"),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Hãy nhập đầy đủ';
+                                    }
+                                    return null;
+                                  },
+                                  controller: provider.totalProductController,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      hintText: 'Số lượng sản phẩm',
+                                      labelText: "Số lượng sản phẩm"),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Hãy nhập đầy đủ';
+                                    }
+                                    return null;
+                                  },
+                                  controller: provider.priceProductController,
+                                  decoration: const InputDecoration(
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide.none),
+                                      filled: true,
+                                      hintText: "Giá sản phẩm",
+                                      labelText: "Giá sản phẩm"),
+                                ),
+                                DropdownButton(
+                                  value: dropDefault,
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: items.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropDefault = newValue!;
+
+                                      if (newValue.endsWith("Món phụ")) {
+                                        type = 1;
+                                      } else if (newValue
+                                          .endsWith("Món chính")) {
+                                        type = 2;
+                                      } else if (newValue.endsWith("Đồ uống")) {
+                                        type = 4;
+                                      } else {
+                                        type = 5;
+                                      }
+                                    });
+                                  },
+                                )
+                              ],
+                            ),
+                          )),
                     ),
                     const SizedBox(height: 30),
                     GestureDetector(onTap: () async {
@@ -76,7 +176,7 @@ class _AddProductPageState extends State<AddProductPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            provider.addProduct(context);
+                            provider.addProduct(context, type!);
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -92,68 +192,6 @@ class _AddProductPageState extends State<AddProductPage> {
               ),
             ),
           ],
-        ));
-  }
-
-  Widget buildForm() {
-    return Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Hãy nhập đầy đủ';
-                  }
-                  return null;
-                },
-                controller: provider.nameProductController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    filled: true,
-                    hintText: "Tên sản phẩm",
-                    labelText: "Tên sản phẩm"),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Hãy nhập đầy đủ';
-                  }
-                  return null;
-                },
-                controller: provider.totalProductController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    filled: true,
-                    hintText: 'Số lượng sản phẩm',
-                    labelText: "Số lượng sản phẩm"),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Hãy nhập đầy đủ';
-                  }
-                  return null;
-                },
-                controller: provider.priceProductController,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(borderSide: BorderSide.none),
-                    filled: true,
-                    hintText: "Giá sản phẩm",
-                    labelText: "Giá sản phẩm"),
-              ),
-            ],
-          ),
         ));
   }
 }

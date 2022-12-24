@@ -54,7 +54,7 @@ class ProductProvider extends DioForNative {
     var formData = {
       "name": name,
       "urlImage": urlImage,
-      "type": type,
+      "idCategory": type,
       "total": total,
       "price": price,
     };

@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/item/bill_not_done.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/bill_controller.dart';
@@ -17,6 +20,19 @@ class BillNotDone extends StatefulWidget {
 class _BillNotDoneState extends State<BillNotDone> {
   BillController get billController => context.read<BillController>();
   StreamController _streamController = StreamController();
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() => isAlertSet = true);
+          }
+        },
+      );
   @override
   void initState() {
     super.initState();
@@ -56,8 +72,8 @@ class _BillNotDoneState extends State<BillNotDone> {
                     if (value.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    final items = value.listBillIsNotDone!;
-                    if (items.isEmpty) {
+                    final items = value.listBillIsNotDone;
+                    if (items!.isEmpty) {
                       return const Center(child: Text('Không có đơn'));
                     }
                     return ListView.builder(
@@ -82,4 +98,27 @@ class _BillNotDoneState extends State<BillNotDone> {
           }
         });
   }
+
+  showDialogBox() => showCupertinoDialog<String>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: const Text('Thông báo'),
+          content: const Text('Hãy kiểm tra kết nối internet của bạn '),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context, 'Cancel');
+                setState(() => isAlertSet = false);
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected && isAlertSet == false) {
+                  showDialogBox();
+                  setState(() => isAlertSet = true);
+                }
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
 }

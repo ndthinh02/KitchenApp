@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
-import 'package:flutter_app_kitchen/service/notification.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
 import 'package:image_fade/image_fade.dart';
 
-class DetailBill extends StatelessWidget {
+import '../model/notification.dart';
+
+class DetailNotifi extends StatelessWidget {
   final BillModel bill;
-  const DetailBill({super.key, required this.bill});
+  final Notifications notification;
+  const DetailNotifi(
+      {super.key, required this.bill, required this.notification});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: colorMain,
-          title: const Text('Chi tiết đơn'),
+          title: const Text('Thông báo'),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -25,9 +28,18 @@ class DetailBill extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Text(
-                  'Tên bàn: ${bill.table!.name}',
-                  style: MyTextStyle().textSub,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Tên bàn: ${bill.table!.name}',
+                      style: MyTextStyle().textSub,
+                    ),
+                    Text(
+                      '${notification.date}',
+                      style: MyTextStyle().textDate,
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
@@ -46,12 +58,19 @@ class DetailBill extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
+                bill.status == 0
+                    ? Text(
+                        "Trạng thái đơn: chưa hoàn thành",
+                        style: MyTextStyle().textSub,
+                      )
+                    : Text("Trạng thái đơn: đã hoàn thành",
+                        style: MyTextStyle().textSub),
+                const SizedBox(
+                  height: 20,
+                ),
                 Text(
                   'Món ăn trong hóa đơn: ',
                   style: MyTextStyle().textSub,
-                ),
-                const SizedBox(
-                  height: 20,
                 ),
                 const SizedBox(
                   height: 20,
@@ -114,26 +133,6 @@ class DetailBill extends StatelessWidget {
                                       style: MyTextStyle().textPriceBill,
                                     ),
                                     const SizedBox(height: 30),
-                                    SizedBox(
-                                      width: 140,
-                                      height: 40,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: colorMain,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50))),
-                                          onPressed: () {
-                                            NotificationKitChen().pushNotification(
-                                                "Thông báo",
-                                                bill.staff!.tokenFCM!,
-                                                bill.sId!,
-                                                "Nguyên liệu món ${items.name} đã hết",
-                                                "");
-                                          },
-                                          child: const Text("Hết nguyên liệu")),
-                                    ),
                                   ],
                                 ),
                               ),

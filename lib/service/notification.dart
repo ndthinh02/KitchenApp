@@ -39,7 +39,7 @@ class NotificationKitChen extends DioForNative {
       String idSender, String idBill, Staff receiver) async {
     Notifications? notifications;
     DateTime dateTime = DateTime.now();
-    String timeFormat = DateFormat.Hms().format(dateTime);
+    String timeFormat = DateFormat.Hm().format(dateTime);
     String dateFormat = DateFormat.yMd().format(dateTime);
     SharedPreferences pref = await SharedPreferences.getInstance();
     String account = pref.getString("account")!;

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio/native_imp.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../config/api_key.dart';
 import '../../model/bill_model.dart';
+import '../../model/product_model.dart';
 
 class BillProvider extends DioForNative with ChangeNotifier {
   Future<List<BillModel>?> getBillDone() async {
@@ -23,7 +26,7 @@ class BillProvider extends DioForNative with ChangeNotifier {
   Future<BillModel?> getBillById(String idBill) async {
     try {
       final resp = await get(
-          "https://restaurant-server-eight.vercel.app/restaurant/api/bill?id=63a519e4196c2874ea666cd1");
+          "https://restaurant-server-eight.vercel.app/restaurant/api/bill?id=$idBill");
       return BillModel.fromJson(resp.data);
     } on DioError catch (e) {
       print(e.message);
@@ -74,5 +77,24 @@ class BillProvider extends DioForNative with ChangeNotifier {
       e.message;
     }
     return updatedBill;
+  }
+
+  // ======================   QUANTITY PRODUCT ===================================//
+  Future<ProductModel?> updateQuantityProduct(String id, num total) async {
+    var data = {"total": total};
+    ProductModel? productModel;
+    try {
+      final resp = await put(
+          'https://restaurant-server-eight.vercel.app/restaurant/api/products/$id?_method=PUT',
+          data: data,
+          options: Options(headers: {
+            HttpHeaders.contentTypeHeader: "application/x-www-form-urlencoded"
+          }));
+
+      return ProductModel.fromJson(resp.data);
+    } on DioError catch (e) {
+      print(e.error);
+    }
+    return productModel;
   }
 }

@@ -13,9 +13,7 @@ class NotificationService extends DioForNative {
       android: AndroidInitializationSettings("@mipmap/ic_launcher"),
     );
 
-    _notificationsPlugin.initialize(
-      initializationSettings,
-    );
+    _notificationsPlugin.initialize(initializationSettings);
   }
 
   static void createanddisplaynotification(RemoteMessage message) async {

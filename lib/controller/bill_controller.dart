@@ -31,6 +31,7 @@ class BillController extends ChangeNotifier {
     isLoading = true;
     listBillIsNotDone = await billProvider?.getBillNotDone();
     isLoading = false;
+
     notifyListeners();
   }
 
@@ -42,6 +43,7 @@ class BillController extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future updateQuantity() async {}
   Future loadBillFloor2() async {
     isLoading = true;
     listAllBill =
@@ -60,6 +62,7 @@ class BillController extends ChangeNotifier {
 
   Future loadBillById(String idBill) async {
     billModels = await billProvider!.getBillById(idBill);
+    print('msksm${billModels!.table!.name}');
     notifyListeners();
   }
 
@@ -94,7 +97,9 @@ class BillController extends ChangeNotifier {
       String floor,
       String nameTable,
       String idStaff,
-      Staff receiver) async {
+      Staff receiver,
+      num total,
+      String idFood) async {
     String idReceive = "";
     SharedPreferences pref = await SharedPreferences.getInstance();
     idReceive = pref.getString("id")!;
@@ -130,7 +135,9 @@ class BillController extends ChangeNotifier {
                       idStaff,
                       idBill,
                       receiver))
-                  .whenComplete(() => listBillIsNotDone!.removeAt(index));
+                  .whenComplete(() => listBillIsNotDone!.removeAt(index))
+                  .whenComplete(
+                      () => billProvider!.updateQuantityProduct(idFood, total));
               notifyListeners();
             },
             actionNo: () {

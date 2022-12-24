@@ -35,7 +35,6 @@ class AddProductController extends ChangeNotifier {
     Reference reference = FirebaseStorage.instance.ref();
     Reference referenceDirImage = reference.child("images");
     Reference referenceUploadImage = referenceDirImage.child(name);
-    print('heehehh$reference');
 
     final pickedFile =
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
@@ -67,7 +66,7 @@ class AddProductController extends ChangeNotifier {
     uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
     final snapshot = await uploadTask!.whenComplete(() {});
     urlImageeee = await snapshot.ref.getDownloadURL();
-    print('ahahhahah$file');
+
     uploadTask = null;
     if (pickedFile != null) {
     } else {
@@ -78,7 +77,7 @@ class AddProductController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future addProduct(BuildContext context) async {
+  Future addProduct(BuildContext context, int type) async {
     if (urlImageeee.isEmpty) {
       Fluttertoast.showToast(
           msg: 'Đã xảy ra lỗi, hãy chọn lại ảnh', gravity: ToastGravity.TOP);
@@ -96,7 +95,7 @@ class AddProductController extends ChangeNotifier {
             });
         _productModel = await productProvider
             .addProduct(nameProductController.text, priceProductController.text,
-                totalProductController.text, 1, urlImageeee)
+                totalProductController.text, type, urlImageeee)
             .whenComplete(() => _clear())
             .whenComplete(() => Navigator.of(context).pop())
             .whenComplete(() => Fluttertoast.showToast(

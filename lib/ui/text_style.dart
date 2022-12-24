@@ -35,6 +35,11 @@ class MyTextStyle {
         fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400);
   }
 
+  TextStyle get textDate {
+    return GoogleFonts.josefinSans(
+        fontSize: 20, color: Colors.red, fontWeight: FontWeight.w400);
+  }
+
   TextStyle get textAppbar {
     return GoogleFonts.josefinSans(
         fontSize: 20, color: Colors.white, fontWeight: FontWeight.w400);
