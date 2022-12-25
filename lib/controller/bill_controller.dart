@@ -31,7 +31,7 @@ class BillController extends ChangeNotifier {
     isLoading = true;
     listBillIsNotDone = await billProvider?.getBillNotDone();
     isLoading = false;
-
+    print('hhehe$listBillIsNotDone()');
     notifyListeners();
   }
 
@@ -109,7 +109,7 @@ class BillController extends ChangeNotifier {
         builder: (context) {
           return CustomAlertDialog(
             title: 'Thông báo',
-            description: 'Bạn có muốn hoàn thành  đơn này ??',
+            description: 'Bạn có muốn hoàn thành đơn này ?',
             actionYes: () async {
               showDialog(
                   context: context,

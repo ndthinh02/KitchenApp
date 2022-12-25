@@ -120,7 +120,7 @@ class ProductProvider extends DioForNative {
       final resp = await get(
           "https://restaurant-server-eight.vercel.app/restaurant/api/notification/receiver/$idStaff");
       var getData = resp.data as List;
-      print('dnsjdnj$getData');
+
       return getData.map((e) => Notifications.fromJson(e)).toList();
     } on DioError catch (e) {
       print(e.message);

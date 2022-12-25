@@ -5,6 +5,7 @@ import 'package:flutter_app_kitchen/item/bill_not_done.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/bill_controller.dart';
+import '../../provider/create_route.dart';
 
 class BillNotDone extends StatefulWidget {
   const BillNotDone({super.key});
@@ -57,7 +58,10 @@ class _BillNotDoneState extends State<BillNotDone> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     final items = value.listBillIsNotDone;
-                    if (items!.isEmpty) {
+                    if (items == null) {
+                      return const Center(child: Text('Kiểm tra lại internet'));
+                    }
+                    if (items.isEmpty) {
                       return const Center(child: Text('Không có đơn'));
                     }
                     return ListView.builder(
@@ -66,9 +70,8 @@ class _BillNotDoneState extends State<BillNotDone> {
                         final item = items[index];
                         return GestureDetector(
                             onTap: () {
-                              // Navigator.of(context).push(CreateRoute()
-                              //     .createAnimationDetailBill(item));
-                              print('hehehe$index');
+                              Navigator.of(context).push(CreateRoute()
+                                  .createAnimationDetailBill(item));
                             },
                             child: ListBillNotDone(
                               billModel: item,

@@ -24,6 +24,7 @@ class ProductController extends ChangeNotifier {
   final priceProductController = TextEditingController();
   UploadTask? uploadTask;
   String imageUrl = "";
+  double? progess;
   File? file;
   final _picker = ImagePicker();
   void _clear() {
@@ -77,8 +78,9 @@ class ProductController extends ChangeNotifier {
     Reference referenceDirImage = reference.child("images");
     Reference referenceUploadImage = referenceDirImage.child(name);
 
-    final pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    final pickedFile = await _picker
+        .pickImage(source: ImageSource.gallery, imageQuality: 80)
+        .whenComplete(() => progess = 0);
     file = File(pickedFile!.path);
     notifyListeners();
     uploadTask = referenceUploadImage.putFile(File(pickedFile.path));
@@ -136,26 +138,31 @@ class ProductController extends ChangeNotifier {
               MaterialPageRoute(builder: (context) => const MyHomePage())));
       notifyListeners();
     } else {
-      if (imageUrl.isEmpty) {
-        Fluttertoast.showToast(
-            msg: 'Đã xảy ra lỗi, hãy chọn lại ảnh', gravity: ToastGravity.TOP);
+      if (progess! <= 0) {
+        return;
       } else {
-        _productModel = await productProvider
-            ?.updateProduct(
-                id,
-                nameProductController.text,
-                priceProductController.text,
-                totalProductController.text,
-                imageUrl)
-            .whenComplete(() => Navigator.of(context).pop())
-            .whenComplete(() => _clear())
-            .whenComplete(() => file = null)
-            .whenComplete(() => Fluttertoast.showToast(
-                msg: "Sửa thành công", gravity: ToastGravity.TOP))
-            .whenComplete(() => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const MyHomePage())));
+        if (imageUrl.isEmpty) {
+          Fluttertoast.showToast(
+              msg: 'Đã xảy ra lỗi, hãy chọn lại ảnh',
+              gravity: ToastGravity.TOP);
+        } else {
+          _productModel = await productProvider
+              ?.updateProduct(
+                  id,
+                  nameProductController.text,
+                  priceProductController.text,
+                  totalProductController.text,
+                  imageUrl)
+              .whenComplete(() => Navigator.of(context).pop())
+              .whenComplete(() => _clear())
+              .whenComplete(() => file = null)
+              .whenComplete(() => Fluttertoast.showToast(
+                  msg: "Sửa thành công", gravity: ToastGravity.TOP))
+              .whenComplete(() => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MyHomePage())));
 
-        notifyListeners();
+          notifyListeners();
+        }
       }
     }
   }
@@ -249,7 +256,7 @@ class ProductController extends ChangeNotifier {
         print('ahahahaha${snapshot.data}');
         if (snapshot.hasData) {
           final data = snapshot.data!;
-          double progress = data.bytesTransferred / data.totalBytes;
+          progess = data.bytesTransferred / data.totalBytes;
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
@@ -258,13 +265,13 @@ class ProductController extends ChangeNotifier {
                 fit: StackFit.expand,
                 children: [
                   LinearProgressIndicator(
-                    value: progress,
+                    value: progess,
                     backgroundColor: Colors.grey,
                     color: colorMain,
                   ),
                   Center(
                     child: Text(
-                      '${(100 * progress).roundToDouble()}%',
+                      '${(100 * progess!).roundToDouble()}%',
                       style: const TextStyle(color: Colors.white),
                     ),
                   )

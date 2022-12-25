@@ -19,6 +19,7 @@ class AddProductController extends ChangeNotifier {
   late String price = priceProductController.text;
   UploadTask? uploadTask;
   String urlImageeee = "";
+  double? progres;
 
   File? file;
   final _picker = ImagePicker();
@@ -58,8 +59,9 @@ class AddProductController extends ChangeNotifier {
     Reference referenceDirImage = reference.child("images");
     Reference referenceUploadImage = referenceDirImage.child(name);
 
-    final pickedFile =
-        await _picker.pickImage(source: ImageSource.camera, imageQuality: 80);
+    final pickedFile = await _picker
+        .pickImage(source: ImageSource.camera, imageQuality: 80)
+        .whenComplete(() => progres = 0);
 
     file = File(pickedFile!.path);
     notifyListeners();
@@ -78,33 +80,43 @@ class AddProductController extends ChangeNotifier {
   }
 
   Future addProduct(BuildContext context, int type) async {
-    if (urlImageeee.isEmpty) {
-      Fluttertoast.showToast(
-          msg: 'Đã xảy ra lỗi, hãy chọn lại ảnh', gravity: ToastGravity.TOP);
+    if (progres! <= 0) {
+      return;
     } else {
-      if (file == null) {
-        Fluttertoast.showToast(msg: "Hãy chọn ảnh", gravity: ToastGravity.TOP);
+      print("heeh lon hon ne");
+      if (urlImageeee.isEmpty) {
+        Fluttertoast.showToast(
+            msg: 'Đã xảy ra lỗi, hãy chọn lại ảnh', gravity: ToastGravity.TOP);
       } else {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
-        _productModel = await productProvider
-            .addProduct(nameProductController.text, priceProductController.text,
-                totalProductController.text, type, urlImageeee)
-            .whenComplete(() => _clear())
-            .whenComplete(() => Navigator.of(context).pop())
-            .whenComplete(() => Fluttertoast.showToast(
-                msg: "Thêm thành công", gravity: ToastGravity.TOP))
-            .whenComplete(() => file = null)
-            .whenComplete(() => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const MyHomePage())));
+        if (file == null) {
+          Fluttertoast.showToast(
+              msg: "Hãy chọn ảnh", gravity: ToastGravity.TOP);
+        } else {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              });
+          _productModel = await productProvider
+              .addProduct(
+                  nameProductController.text,
+                  priceProductController.text,
+                  totalProductController.text,
+                  type,
+                  urlImageeee)
+              .whenComplete(() => _clear())
+              .whenComplete(() => Navigator.of(context).pop())
+              .whenComplete(() => Fluttertoast.showToast(
+                  msg: "Thêm thành công", gravity: ToastGravity.TOP))
+              .whenComplete(() => file = null)
+              .whenComplete(() => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const MyHomePage())));
 
-        notifyListeners();
+          notifyListeners();
+        }
       }
     }
   }
@@ -113,10 +125,10 @@ class AddProductController extends ChangeNotifier {
     return StreamBuilder<TaskSnapshot>(
       stream: uploadTask?.snapshotEvents,
       builder: (context, snapshot) {
-        print('ahahahaha${snapshot.data}');
         if (snapshot.hasData) {
           final data = snapshot.data!;
-          double progress = data.bytesTransferred / data.totalBytes;
+          progres = data.bytesTransferred / data.totalBytes;
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: SizedBox(
@@ -125,13 +137,13 @@ class AddProductController extends ChangeNotifier {
                 fit: StackFit.expand,
                 children: [
                   LinearProgressIndicator(
-                    value: progress,
+                    value: progres,
                     backgroundColor: Colors.grey,
                     color: colorMain,
                   ),
                   Center(
                     child: Text(
-                      '${(100 * progress).roundToDouble()}%',
+                      '${(100 * progres!).roundToDouble()}%',
                       style: const TextStyle(color: Colors.white),
                     ),
                   )
