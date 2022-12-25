@@ -88,18 +88,17 @@ class BillController extends ChangeNotifier {
   }
 
   Future updateBill(
-      String? id,
-      BuildContext context,
-      int index,
-      String idTable,
-      String tokenFcm,
-      String idBill,
-      String floor,
-      String nameTable,
-      String idStaff,
-      Staff receiver,
-      num total,
-      String idFood) async {
+    String? id,
+    BuildContext context,
+    int index,
+    String idTable,
+    String tokenFcm,
+    String idBill,
+    String floor,
+    String nameTable,
+    String idStaff,
+    Staff receiver,
+  ) async {
     String idReceive = "";
     SharedPreferences pref = await SharedPreferences.getInstance();
     idReceive = pref.getString("id")!;
@@ -135,9 +134,7 @@ class BillController extends ChangeNotifier {
                       idStaff,
                       idBill,
                       receiver))
-                  .whenComplete(() => listBillIsNotDone!.removeAt(index))
-                  .whenComplete(
-                      () => billProvider!.updateQuantityProduct(idFood, total));
+                  .whenComplete(() => listBillIsNotDone!.removeAt(index));
               notifyListeners();
             },
             actionNo: () {

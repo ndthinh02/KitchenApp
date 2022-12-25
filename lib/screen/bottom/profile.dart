@@ -1,6 +1,11 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,7 +25,41 @@ class _ProfilePageState extends State<ProfilePage> {
   String account = "";
   String phoneNumber = "";
   int? gender;
-
+  late StreamSubscription subscription;
+  bool isDeviceConnected = false;
+  bool isAlertSet = false;
+  getConnectivity() =>
+      subscription = Connectivity().onConnectivityChanged.listen(
+        (ConnectivityResult result) async {
+          isDeviceConnected = await InternetConnectionChecker().hasConnection;
+          if (!isDeviceConnected && isAlertSet == false) {
+            showDialogBox();
+            setState(() => isAlertSet = true);
+          }
+        },
+      );
+  showDialogBox() => showCupertinoDialog<String>(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: const Text('Thông báo'),
+          content: const Text('Hãy kiểm tra kết nối internet của bạn '),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context, 'Cancel');
+                setState(() => isAlertSet = false);
+                isDeviceConnected =
+                    await InternetConnectionChecker().hasConnection;
+                if (!isDeviceConnected && isAlertSet == false) {
+                  showDialogBox();
+                  setState(() => isAlertSet = true);
+                }
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
   getInfoUser() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
@@ -30,6 +69,13 @@ class _ProfilePageState extends State<ProfilePage> {
       gender = pref.getInt("gender")!;
       // print('dssamjdnsajd$gender');
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getConnectivity();
   }
 
   @override
@@ -48,10 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 height: 100,
               ),
               CircleAvatar(
-                radius: 50,
-                child: Image.network(
-                    "https://th.bing.com/th/id/OIP.RTJNkSGLqIiTyE0WP4iGIAHaH0?w=179&h=188&c=7&r=0&o=5&dpr=1.1&pid=1.7"),
-              ),
+                  backgroundColor: Colors.white,
+                  radius: 50,
+                  child: Image.asset("images/logomoi.png")),
               const SizedBox(
                 height: 20,
               ),

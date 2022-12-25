@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/bill_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
@@ -27,7 +25,7 @@ class _DetailBillState extends State<ListBillNotDone> {
   BillModel get readBill => context.read<BillModel>();
   BillModel get watchBill => context.watch<BillModel>();
   BillController get billController => context.read<BillController>();
-  final StreamController _streamController = StreamController();
+
   String idStaff = "";
   getIdStaff() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -41,7 +39,6 @@ class _DetailBillState extends State<ListBillNotDone> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     getIdStaff();
   }
 
@@ -100,22 +97,19 @@ class _DetailBillState extends State<ListBillNotDone> {
                             borderRadius: BorderRadius.circular(50))),
                     onPressed: () {
                       final items = widget.billModel;
-                      num totalNow = items.foods![widget.index].total! -
-                          items.foods![widget.index].amount!;
-                      print('heheh$totalNow');
+
                       billController.updateBill(
-                          items.sId,
-                          context,
-                          widget.index,
-                          items.table!.sId!,
-                          items.staff!.tokenFCM!,
-                          items.sId!,
-                          items.table!.floor.toString(),
-                          items.table!.name!,
-                          items.staff!.sId!,
-                          widget.staff,
-                          totalNow,
-                          items.foods![widget.index].sId!);
+                        items.sId,
+                        context,
+                        widget.index,
+                        items.table!.sId!,
+                        items.staff!.tokenFCM!,
+                        items.sId!,
+                        items.table!.floor.toString(),
+                        items.table!.name!,
+                        items.staff!.sId!,
+                        widget.staff,
+                      );
                     },
                     child: const Text("Chưa hoàn thành")),
               ),

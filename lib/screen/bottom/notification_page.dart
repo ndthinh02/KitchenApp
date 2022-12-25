@@ -1,13 +1,10 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/controller/bill_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:flutter_app_kitchen/provider/notification/notification_provider.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,55 +25,26 @@ class _NotificationPageState extends State<NotificationPage> {
   String idBill = "";
   BillController get watchBill => context.watch<BillController>();
   BillModel? billModel;
-  late StreamSubscription subscription;
-  bool isDeviceConnected = false;
-  bool isAlertSet = false;
-  getConnectivity() =>
-      subscription = Connectivity().onConnectivityChanged.listen(
-        (ConnectivityResult result) async {
-          isDeviceConnected = await InternetConnectionChecker().hasConnection;
-          if (!isDeviceConnected && isAlertSet == false) {
-            showDialogBox();
-            setState(() => isAlertSet = true);
-          }
-        },
-      );
-  showDialogBox() => showCupertinoDialog<String>(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: const Text('Thông báo'),
-          content: const Text('Hãy kiểm tra kết nối internet của bạn '),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context, 'Cancel');
-                setState(() => isAlertSet = false);
-                isDeviceConnected =
-                    await InternetConnectionChecker().hasConnection;
-                if (!isDeviceConnected && isAlertSet == false) {
-                  showDialogBox();
-                  setState(() => isAlertSet = true);
-                }
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
+
+
   @override
   void initState() {
     super.initState();
-    loadIdStaff();
-    getConnectivity();
+    readNotification
+        .getNotification("638cbf7be49211ee0bc33517");
   }
 
+  final StreamController _streamController = StreamController();
   loadIdStaff() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() async {
       idStaff = pref.getString("id")!;
-      readNotification.getNotification(idStaff);
+
+
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -88,75 +56,82 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         body: Container(
             margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            child: Consumer<NotificationProvider>(
-              builder: (context, data, child) {
-                if (data.isLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final noti = data.mList;
-                if (noti!.isEmpty) {
-                  return const Center(
-                    child: Text("Không có thông báo"),
-                  );
-                }
-                return ListView.builder(
-                    itemCount: data.mList!.length,
-                    itemBuilder: ((context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () async {
-                            showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                            );
-                            billModel = await BillProvider()
-                                .getBillById(noti[index].idBill!)
-                                .whenComplete(
-                                    () => Navigator.of(context).pop());
+            child:  Consumer<NotificationProvider>(
+            builder: (context, data, child) {
+    if (data.isLoading) {
+    return const Center(
+    child: CircularProgressIndicator(),
+    );
+    }
+    final noti = data.mList;
+    if (noti == null) {
+    return const Center(
+    child: Text("Kiểm tra lại internet"),
+    );
+    }
+    if (noti.isEmpty) {
+    return const Center(
+    child: Text("Không có thông báo"),
+    );
+    }
+    return ListView.builder(
+    itemCount: data.mList!.length,
+    itemBuilder: ((context, index) {
+    return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: GestureDetector(
+    onTap: () async {
+    showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+    return const Center(
+    child: CircularProgressIndicator(),
+    );
+    },
+    );
+    billModel = await BillProvider()
+        .getBillById(noti[index].idBill!)
+        .whenComplete(() =>
+    Navigator.of(context).pop());
 
-                            Navigator.of(context).push(CreateRoute()
-                                .createAnimationDetailNotifi(
-                                    billModel!, noti[index]));
-                          },
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14)),
-                            elevation: 8,
-                            child: ListTile(
-                                title: Text(noti[index].title!),
-                                leading: const Icon(
-                                  Icons.notifications,
-                                  color: Colors.amber,
-                                ),
-                                subtitle: Text(noti[index].content!),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.timer,
-                                      color: Colors.amber,
-                                    ),
-                                    Text(
-                                      noti[index].time!,
-                                      style: const TextStyle(
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        ),
-                      );
-                    }));
-              },
-            )));
+    Navigator.of(context).push(CreateRoute()
+        .createAnimationDetailNotifi(
+    billModel!, noti[index]));
+    },
+    child: Card(
+    shape: RoundedRectangleBorder(
+    borderRadius:
+    BorderRadius.circular(14)),
+    elevation: 8,
+    child: ListTile(
+    title: Text(noti[index].title!),
+    leading: const Icon(
+    Icons.notifications,
+    color: Colors.amber,
+    ),
+    subtitle: Text(noti[index].content!),
+    trailing: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+    const Icon(
+    Icons.timer,
+    color: Colors.amber,
+    ),
+    Text(
+    noti[index].time!,
+    style: const TextStyle(
+    color: Colors.red,
+    fontWeight:
+    FontWeight.bold),
+    ),
+    ],
+    )),
+    ),
+    ),
+    );
+    }));
+    },
+    )));
   }
 }

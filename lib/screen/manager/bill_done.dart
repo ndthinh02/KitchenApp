@@ -59,7 +59,10 @@ class _BillDoneState extends State<BillDone> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     final items = value.listBillModel;
-                    if (items!.isEmpty) {
+                    if (items == null) {
+                      return const Center(child: Text('Kiểm tra lại internet'));
+                    }
+                    if (items.isEmpty) {
                       return const Center(child: Text('Không có đơn'));
                     }
                     return ListView.builder(

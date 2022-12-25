@@ -182,10 +182,10 @@ class _HomePageState extends State<HomePage> {
                     if (provider.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    final items = provider.mListProduct!;
-                    if (items.isEmpty) {
+                    final items = provider.mListProduct;
+                    if (items == null) {
                       return const Text(
-                        'Không có sản phẩm',
+                        'Kiểm tra lại internet',
                         style: TextStyle(color: Colors.black),
                       );
                     }
