@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/screen/manager/bill.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../provider/notification/notification_provider.dart';
 import 'bottom/home_page.dart';
 import 'bottom/notification_page.dart';
 import 'bottom/profile.dart';
@@ -19,12 +22,29 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController textPasstroller = TextEditingController();
   bool isShowPass = true;
   int pageIndex = 0;
+  String idStaff = "";
+  NotificationProvider get readNotification =>
+      context.read<NotificationProvider>();
+  NotificationProvider get watch => context.watch<NotificationProvider>();
+
   final List<Widget> _widgetOption = [
     const HomePage(),
     const NotificationPage(),
     const BillPage(),
     const ProfilePage(),
   ];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadIdStaff();
+  }
+
+  loadIdStaff() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    idStaff = pref.getString("id")!;
+    readNotification.getNotification(idStaff);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: GNav(
             rippleColor: Colors.grey[300]!,
             hoverColor: Colors.grey[100]!,
+            gap: 8,
             activeColor: Colors.black,
             iconSize: 24,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -52,26 +73,38 @@ class _MyHomePageState extends State<MyHomePage> {
             // ignore: prefer_const_literals_to_create_immutables
             tabs: [
               const GButton(
-                hoverColor: Colors.amber,
-                backgroundColor: Colors.transparent,
                 icon: Icons.home_outlined,
                 text: 'Home',
               ),
-              const GButton(
-                hoverColor: Colors.amber,
-                backgroundColor: Colors.transparent,
+              GButton(
+                onPressed: () {
+                  readNotification.initNoti();
+                },
+                leading: Stack(
+                  children: [
+                    const Icon(Icons.notifications_outlined),
+                    Positioned(
+                        child: CircleAvatar(
+                      backgroundColor: Colors.red,
+                      radius: 8,
+                      child: readNotification.isToogle
+                          ? Text(watch.mList!.length.toString(),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 7))
+                          : const Text('0',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 7)),
+                    ))
+                  ],
+                ),
                 icon: Icons.notifications_outlined,
                 text: 'Thông báo',
               ),
               const GButton(
-                hoverColor: Colors.amber,
-                backgroundColor: Colors.transparent,
                 icon: Icons.today_outlined,
                 text: 'Quản lý đơn',
               ),
               const GButton(
-                hoverColor: Colors.amber,
-                backgroundColor: Colors.transparent,
                 icon: (Icons.person_outline_outlined),
                 text: 'Cá nhân',
               ),

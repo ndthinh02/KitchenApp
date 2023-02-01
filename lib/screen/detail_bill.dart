@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
+import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
 import 'package:flutter_app_kitchen/service/notification.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
+import 'package:flutter_app_kitchen/ui/dialog.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_fade/image_fade.dart';
 
 class DetailBill extends StatelessWidget {
@@ -11,6 +14,7 @@ class DetailBill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int i = 1;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: colorMain,
@@ -73,7 +77,8 @@ class DetailBill extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: const EdgeInsets.all(20),
+                                margin: const EdgeInsets.only(
+                                    top: 50, left: 20, right: 20),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(14),
                                   child: SizedBox(
@@ -97,7 +102,8 @@ class DetailBill extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                margin: const EdgeInsets.only(top: 38),
+                                margin:
+                                    const EdgeInsets.only(top: 38, bottom: 20),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -109,9 +115,36 @@ class DetailBill extends StatelessWidget {
                                         maxLines: 1,
                                       ),
                                     ),
+                                    const SizedBox(height: 10),
                                     Text(
                                       'Số lượng: ${items.amount}',
                                       style: MyTextStyle().textPriceBill,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    SizedBox(
+                                      width: 140,
+                                      height: 40,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: colorMain,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          50))),
+                                          onPressed: () {
+                                            NotificationKitChen()
+                                                .pushNotification(
+                                                    "Thông báo",
+                                                    bill.staff!.tokenFCM!,
+                                                    bill.sId!,
+                                                    "Nguyên liệu món ${items.name} đã hết",
+                                                    "")
+                                                .whenComplete(() =>
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            "Đã thông báo cho nhân viên "));
+                                          },
+                                          child: const Text("Hết nguyên liệu")),
                                     ),
                                     const SizedBox(height: 30),
                                     SizedBox(
@@ -125,14 +158,49 @@ class DetailBill extends StatelessWidget {
                                                       BorderRadius.circular(
                                                           50))),
                                           onPressed: () {
-                                            NotificationKitChen().pushNotification(
-                                                "Thông báo",
-                                                bill.staff!.tokenFCM!,
-                                                bill.sId!,
-                                                "Nguyên liệu món ${items.name} đã hết",
-                                                "");
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return CustomAlertDialog(
+                                                    title: "Thông báo",
+                                                    description:
+                                                        "Bạn có muốn hoàn thành món ăn ?",
+                                                    actionYes: () {
+                                                      NotificationKitChen()
+                                                          .pushNotification(
+                                                              "Thông báo",
+                                                              bill.staff!
+                                                                  .tokenFCM!,
+                                                              bill.sId!,
+                                                              "Món ${items.name} đã hoàn thành",
+                                                              "")
+                                                          .whenComplete(() =>
+                                                              Fluttertoast
+                                                                  .showToast(
+                                                                      msg:
+                                                                          "Đã thông báo cho nhân viên"))
+                                                          .whenComplete(() =>
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop())
+                                                          .whenComplete(
+                                                              () => i++);
+
+                                                      if (bill.foods!.length ==
+                                                          i) {
+                                                        BillProvider()
+                                                            .updateStatusBill(
+                                                                bill.sId);
+                                                      }
+                                                    },
+                                                    actionNo: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    });
+                                              },
+                                            );
                                           },
-                                          child: const Text("Hết nguyên liệu")),
+                                          child: const Text("Hoàn thành món")),
                                     ),
                                   ],
                                 ),

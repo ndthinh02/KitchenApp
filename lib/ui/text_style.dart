@@ -27,7 +27,7 @@ class MyTextStyle {
 
   TextStyle get textPrice {
     return GoogleFonts.josefinSans(
-        fontSize: 24, color: Colors.red, fontWeight: FontWeight.bold);
+        fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold);
   }
 
   TextStyle get textSub {

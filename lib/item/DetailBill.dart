@@ -55,7 +55,7 @@ class _DetailBillState extends State<ListBill> {
                         style: MyTextStyle().textSub,
                       ),
                       Text(
-                        '\$ ${widget.billModel.totalPrice}',
+                        ' ${widget.billModel.totalPrice} 000đ',
                         style: MyTextStyle().textPrice,
                       ),
                     ],

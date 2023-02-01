@@ -114,9 +114,11 @@ class _NotificationPageState extends State<NotificationPage> {
                                 elevation: 8,
                                 child: ListTile(
                                     title: Text(noti[index].title!),
-                                    leading: const Icon(
-                                      Icons.notifications,
-                                      color: Colors.amber,
+                                    leading: const CircleAvatar(
+                                      child: Icon(
+                                        Icons.notifications,
+                                        color: Colors.amber,
+                                      ),
                                     ),
                                     subtitle: Text(noti[index].content!),
                                     trailing: Row(
@@ -124,6 +126,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                       children: [
                                         const Icon(
                                           Icons.timer,
+                                          size: 15,
                                           color: Colors.amber,
                                         ),
                                         Text(

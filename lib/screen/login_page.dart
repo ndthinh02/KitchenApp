@@ -91,7 +91,7 @@ class _MyHomePageState extends State<LoginPage> {
           children: [
             const SizedBox(height: 70),
             Text(
-              'Login',
+              'Đăng nhập',
               style: MyTextStyle().textLogin,
             ),
             const SizedBox(height: 100),

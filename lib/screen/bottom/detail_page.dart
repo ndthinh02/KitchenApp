@@ -51,7 +51,7 @@ class DetailPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "\$ ${product.price}",
+                        " ${product.price} 000đ",
                         style: MyTextStyle().textPrice,
                       )
                     ],

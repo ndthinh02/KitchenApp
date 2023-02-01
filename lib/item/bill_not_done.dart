@@ -78,7 +78,7 @@ class _DetailBillState extends State<ListBillNotDone> {
                         style: MyTextStyle().textSub,
                       ),
                       Text(
-                        '\$ ${widget.billModel.totalPrice}',
+                        ' ${widget.billModel.totalPrice} 000đ',
                         style: MyTextStyle().textPrice,
                       )
                     ],
@@ -96,20 +96,20 @@ class _DetailBillState extends State<ListBillNotDone> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50))),
                     onPressed: () {
-                      final items = widget.billModel;
+                      // final items = widget.billModel;
 
-                      billController.updateBill(
-                        items.sId,
-                        context,
-                        widget.index,
-                        items.table!.sId!,
-                        items.staff!.tokenFCM!,
-                        items.sId!,
-                        items.table!.floor.toString(),
-                        items.table!.name!,
-                        items.staff!.sId!,
-                        widget.staff,
-                      );
+                      // billController.updateBill(
+                      //   items.sId,
+                      //   context,
+                      //   widget.index,
+                      //   items.table!.sId!,
+                      //   items.staff!.tokenFCM!,
+                      //   items.sId!,
+                      //   items.table!.floor.toString(),
+                      //   items.table!.name!,
+                      //   items.staff!.sId!,
+                      //   widget.staff,
+                      // );
                     },
                     child: const Text("Chưa hoàn thành")),
               ),

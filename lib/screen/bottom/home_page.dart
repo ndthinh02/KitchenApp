@@ -290,12 +290,6 @@ class _HomePageState extends State<HomePage> {
                                                     ),
 
                                                     // shows progress while loading an image:
-                                                    loadingBuilder: (context,
-                                                            progress,
-                                                            chunkEvent) =>
-                                                        const Center(
-                                                            child:
-                                                                CircularProgressIndicator()),
 
                                                     // displayed when an error occurs:
                                                     errorBuilder:
@@ -316,7 +310,7 @@ class _HomePageState extends State<HomePage> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    'Giá: ${items[index].price!}\$',
+                                                    'Giá: ${items[index].price!} 000đ',
                                                     style:
                                                         MyTextStyle().textPrice,
                                                   ),
