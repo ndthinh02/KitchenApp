@@ -79,6 +79,23 @@ class BillProvider extends DioForNative with ChangeNotifier {
     return updatedBill;
   }
 
+  Future<BillModel?> updateStatusFoodInBill(
+      String? idBill, String? idProduct) async {
+    BillModel? updatedBill;
+
+    var data = {"status": 1};
+    try {
+      final resp = await put(
+          "https://restaurant-server-eight.vercel.app/restaurant/api/bill/update/product/$idBill/$idProduct",
+          data: data);
+
+      updatedBill = BillModel.fromJson(resp.data);
+    } on DioError catch (e) {
+      e.message;
+    }
+    return updatedBill;
+  }
+
   // ======================   QUANTITY PRODUCT ===================================//
   Future<ProductModel?> updateQuantityProduct(String id, num total) async {
     var data = {"total": total};

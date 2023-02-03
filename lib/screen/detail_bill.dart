@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
-import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
+import 'package:flutter_app_kitchen/model/done_button.dart';
 import 'package:flutter_app_kitchen/service/notification.dart';
 import 'package:flutter_app_kitchen/ui/color.dart';
-import 'package:flutter_app_kitchen/ui/dialog.dart';
 import 'package:flutter_app_kitchen/ui/text_style.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_fade/image_fade.dart';
+import 'package:provider/provider.dart';
 
-class DetailBill extends StatelessWidget {
+import '../provider/bill/bill_provider.dart';
+import '../ui/dialog.dart';
+
+class DetailBill extends StatefulWidget {
   final BillModel bill;
   const DetailBill({super.key, required this.bill});
 
   @override
+  State<DetailBill> createState() => _DetailBillState();
+}
+
+class _DetailBillState extends State<DetailBill> {
+  Foods get foods => context.read<Foods>();
+  DoneFood get foodss => context.watch<DoneFood>();
+  DoneFood get readFoods => context.read<DoneFood>();
+  @override
   Widget build(BuildContext context) {
     int i = 1;
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: colorMain,
@@ -30,21 +42,21 @@ class DetailBill extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  'Tên bàn: ${bill.table!.name}',
+                  'Tên bàn: ${widget.bill.table!.name}',
                   style: MyTextStyle().textSub,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 Text(
-                  'Tầng số:  ${bill.table!.floor}',
+                  'Tầng số:  ${widget.bill.table!.floor}',
                   style: MyTextStyle().textSub,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 Text(
-                  'Nhân viên phụ trách: ${bill.staff!.name}',
+                  'Nhân viên phụ trách: ${widget.bill.staff!.name}',
                   style: MyTextStyle().textSub,
                 ),
                 const SizedBox(
@@ -63,10 +75,10 @@ class DetailBill extends StatelessWidget {
                 ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: bill.foods!.length,
+                    itemCount: widget.bill.foods!.length,
                     itemBuilder: ((context, index) {
-                      final items = bill.foods![index];
-                      if (bill.foods!.isEmpty) {
+                      final items = widget.bill.foods![index];
+                      if (widget.bill.foods!.isEmpty) {
                         return const Center(child: Text('Không có đơn!'));
                       }
                       return Card(
@@ -135,8 +147,9 @@ class DetailBill extends StatelessWidget {
                                             NotificationKitChen()
                                                 .pushNotification(
                                                     "Thông báo",
-                                                    bill.staff!.tokenFCM!,
-                                                    bill.sId!,
+                                                    widget
+                                                        .bill.staff!.tokenFCM!,
+                                                    widget.bill.sId!,
                                                     "Nguyên liệu món ${items.name} đã hết",
                                                     "")
                                                 .whenComplete(() =>
@@ -148,60 +161,85 @@ class DetailBill extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 30),
                                     SizedBox(
-                                      width: 140,
-                                      height: 40,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: colorMain,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          50))),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return CustomAlertDialog(
-                                                    title: "Thông báo",
-                                                    description:
-                                                        "Bạn có muốn hoàn thành món ăn ?",
-                                                    actionYes: () {
-                                                      NotificationKitChen()
-                                                          .pushNotification(
-                                                              "Thông báo",
-                                                              bill.staff!
-                                                                  .tokenFCM!,
-                                                              bill.sId!,
-                                                              "Món ${items.name} đã hoàn thành",
-                                                              "")
-                                                          .whenComplete(() =>
-                                                              Fluttertoast
-                                                                  .showToast(
-                                                                      msg:
-                                                                          "Đã thông báo cho nhân viên"))
-                                                          .whenComplete(() =>
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop())
-                                                          .whenComplete(
-                                                              () => i++);
+                                        width: 140,
+                                        height: 40,
+                                        child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: colorMain,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50))),
+                                            onPressed: () {
+                                              void btnDone() {
+                                                if (!readFoods.myList
+                                                    .contains(items)) {
+                                                  readFoods.addToList(items);
+                                                } else {
+                                                  readFoods.remove(items);
+                                                }
+                                              }
 
-                                                      if (bill.foods!.length ==
-                                                          i) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return CustomAlertDialog(
+                                                      title: "Thông báo",
+                                                      description:
+                                                          "Bạn có muốn hoàn thành món ăn ?",
+                                                      actionYes: () {
+                                                        NotificationKitChen()
+                                                            .pushNotification(
+                                                                "Thông báo",
+                                                                widget
+                                                                    .bill
+                                                                    .staff!
+                                                                    .tokenFCM!,
+                                                                widget
+                                                                    .bill.sId!,
+                                                                "Món ${items.name} đã hoàn thành",
+                                                                "")
+                                                            .whenComplete(() =>
+                                                                Fluttertoast
+                                                                    .showToast(
+                                                                        msg:
+                                                                            "Đã thông báo cho nhân viên"))
+                                                            .whenComplete(() =>
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop())
+                                                            .whenComplete(
+                                                                () => btnDone())
+                                                            .whenComplete(
+                                                                () => i++);
                                                         BillProvider()
-                                                            .updateStatusBill(
-                                                                bill.sId);
-                                                      }
-                                                    },
-                                                    actionNo: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    });
-                                              },
-                                            );
-                                          },
-                                          child: const Text("Hoàn thành món")),
-                                    ),
+                                                            .updateStatusFoodInBill(
+                                                                widget.bill.sId,
+                                                                widget
+                                                                    .bill
+                                                                    .foods![
+                                                                        index]
+                                                                    .sId);
+                                                        if (widget.bill.foods!
+                                                                .length ==
+                                                            i) {
+                                                          BillProvider()
+                                                              .updateStatusBill(
+                                                                  widget.bill
+                                                                      .sId);
+                                                        }
+                                                      },
+                                                      actionNo: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                },
+                                              );
+                                            },
+                                            child: foodss.myList.contains(items)
+                                                ? const Text("Đã hoàn thành")
+                                                : const Text(
+                                                    "Hoàn thành món"))),
                                   ],
                                 ),
                               ),

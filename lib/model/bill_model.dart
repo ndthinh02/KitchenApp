@@ -78,7 +78,7 @@ class BillModel extends ChangeNotifier {
   }
 }
 
-class Foods {
+class Foods extends ChangeNotifier {
   String? name;
   String? urlImage;
   num? type;
@@ -89,6 +89,8 @@ class Foods {
   String? sId;
   String? createdAt;
   String? updatedAt;
+  num? status;
+  bool? change;
 
   Foods(
       {this.name,
@@ -100,7 +102,9 @@ class Foods {
       this.idCategory,
       this.sId,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.status,
+      this.change = false});
 
   Foods.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -113,6 +117,7 @@ class Foods {
     sId = json['_id'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    status = json['status'];
   }
 
   Map<String, dynamic> toJson() {
@@ -127,6 +132,7 @@ class Foods {
     data['_id'] = sId;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
+    data['status'] = status;
     return data;
   }
 }

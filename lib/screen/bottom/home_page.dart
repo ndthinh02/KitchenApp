@@ -214,17 +214,6 @@ class _HomePageState extends State<HomePage> {
                                       elevation: 10,
                                     ),
                                   ),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                        onPressed: () {
-                                          productController.deleteProduct(
-                                              items[index].sId!,
-                                              index,
-                                              context);
-                                        },
-                                        icon: const Icon(Icons.clear)),
-                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Align(
@@ -359,10 +348,10 @@ Widget _builPopupMenu(BuildContext context) {
       if (value == 2) {
         controller.getProductOutOfStock(context);
       }
-      if (value == 3) {
-        Navigator.of(context)
-            .push(CreateRoute().createAnimationAddProductPage());
-      }
+      // if (value == 3) {
+      //   Navigator.of(context)
+      //       .push(CreateRoute().createAnimationAddProductPage());
+      // }
       if (value == 4) {
         controller.loadProductAll();
       }
@@ -388,15 +377,15 @@ Widget _builPopupMenu(BuildContext context) {
           children: [const Text("Sản phẩm hết hàng")],
         ),
       ),
-      PopupMenuItem(
-        onTap: () {},
-        value: 3,
-        // row has two child icon and text
-        child: Row(
-          // ignore: prefer_const_literals_to_create_immutables
-          children: [const Text("Thêm sản phẩm")],
-        ),
-      ),
+      // PopupMenuItem(
+      //   onTap: () {},
+      //   value: 3,
+      //   // row has two child icon and text
+      //   child: Row(
+      //     // ignore: prefer_const_literals_to_create_immutables
+      //     children: [const Text("Thêm sản phẩm")],
+      //   ),
+      // ),
       PopupMenuItem(
         onTap: () {},
         value: 4,

@@ -97,12 +97,12 @@ class DetailPage extends StatelessWidget {
       itemBuilder: (context) => [
         // popupmenu item 1
 
-        PopupMenuItem(
-          value: 1,
-          child: Row(
-            children: const [Text("Sửa sản phẩm ")],
-          ),
-        ),
+        // PopupMenuItem(
+        //   value: 1,
+        //   child: Row(
+        //     children: const [Text("Sửa sản phẩm ")],
+        //   ),
+        // ),
       ],
       offset: const Offset(0, 70),
       elevation: 2,

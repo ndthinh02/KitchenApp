@@ -76,27 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icons.home_outlined,
                 text: 'Home',
               ),
-              GButton(
-                onPressed: () {
-                  readNotification.initNoti();
-                },
-                leading: Stack(
-                  children: [
-                    const Icon(Icons.notifications_outlined),
-                    Positioned(
-                        child: CircleAvatar(
-                      backgroundColor: Colors.red,
-                      radius: 8,
-                      child: readNotification.isToogle
-                          ? Text(watch.mList!.length.toString(),
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 7))
-                          : const Text('0',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 7)),
-                    ))
-                  ],
-                ),
+              const GButton(
                 icon: Icons.notifications_outlined,
                 text: 'Thông báo',
               ),

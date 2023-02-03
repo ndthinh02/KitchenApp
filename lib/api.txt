@@ -72,6 +72,6 @@
 	//[GET] all: https://restaurant-server-eight.vercel.app/restaurant/api/notification/:idStaff
 
 [POST] bill: https://restaurant-server-eight.vercel.app/restaurant/api/notification/create
-
+https://restaurant-server-eight.vercel.app/restaurant/api/bill/update/product/:idBill/:idProduct
 
 

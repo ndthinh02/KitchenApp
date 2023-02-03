@@ -72,7 +72,7 @@ class _BillDoneState extends State<BillDone> {
                         return GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(CreateRoute()
-                                  .createAnimationDetailBill(item));
+                                  .createAnimationDetailBillDone(item));
                             },
                             child: ListBill(
                               billModel: item,

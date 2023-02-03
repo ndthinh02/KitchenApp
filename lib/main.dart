@@ -6,6 +6,7 @@ import 'package:flutter_app_kitchen/controller/bill_controller.dart';
 import 'package:flutter_app_kitchen/controller/category_controller.dart';
 import 'package:flutter_app_kitchen/controller/staff_controller.dart';
 import 'package:flutter_app_kitchen/model/bill_model.dart';
+import 'package:flutter_app_kitchen/model/done_button.dart';
 import 'package:flutter_app_kitchen/provider/bill/bill_provider.dart';
 import 'package:flutter_app_kitchen/provider/notification/notification_provider.dart';
 import 'package:flutter_app_kitchen/provider/product_provider.dart';
@@ -43,6 +44,12 @@ Future<void> main() async {
     ),
     ChangeNotifierProvider(
       create: ((context) => BillModel()),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) => Foods()),
+    ),
+    ChangeNotifierProvider(
+      create: ((context) => DoneFood()),
     ),
     ChangeNotifierProvider(
       create: ((context) => BillProvider()),

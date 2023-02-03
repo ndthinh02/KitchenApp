@@ -3,6 +3,7 @@ import 'package:flutter_app_kitchen/model/bill_model.dart';
 import 'package:flutter_app_kitchen/model/product_model.dart';
 import 'package:flutter_app_kitchen/screen/detail_noti.dart';
 import 'package:flutter_app_kitchen/screen/manager/add_product_page.dart';
+import 'package:flutter_app_kitchen/screen/manager/detail_bill_done.dart';
 import 'package:flutter_app_kitchen/screen/manager/seacrh_bill.dart';
 import 'package:flutter_app_kitchen/screen/manager/update_page.dart';
 import 'package:flutter_app_kitchen/screen/my_bottom_nav.dart';
@@ -73,6 +74,26 @@ class CreateRoute {
   Route createAnimationDetailBill(BillModel billModel) {
     return PageRouteBuilder(
       pageBuilder: ((context, animation, secondaryAnimation) => DetailBill(
+            bill: billModel,
+          )),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Route createAnimationDetailBillDone(BillModel billModel) {
+    return PageRouteBuilder(
+      pageBuilder: ((context, animation, secondaryAnimation) => DetailBillDone(
             bill: billModel,
           )),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {

@@ -73,15 +73,15 @@ class _DetailBillState extends State<ListBill> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50))),
                       onPressed: () {
-                        setState(() {
-                          widget.billModel.isToogleDone();
-                          if (widget.billModel.isDone) {
-                            // NotificationKitChen().pushNotification(
-                            //     "Đơn  ${widget.billModel.table!.name} đã xong");
-                            // billController.updateBill(
-                            //     widget.billModel.sId, 1, context, widget.index);
-                          }
-                        });
+                        // setState(() {
+                        //   widget.billModel.isToogleDone();
+                        //   if (widget.billModel.isDone) {
+                        //     // NotificationKitChen().pushNotification(
+                        //     //     "Đơn  ${widget.billModel.table!.name} đã xong");
+                        //     // billController.updateBill(
+                        //     //     widget.billModel.sId, 1, context, widget.index);
+                        //   }
+                        // });
                       },
                       child: const Text('Đã hoàn thành'))),
             ],
